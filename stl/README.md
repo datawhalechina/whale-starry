@@ -1,8 +1,8 @@
 # Team
 
-Team Name: fight_flow
+Team Name: green
 
-Team Member: light-city
+Team Member: GrowlR
 
 ## Other
 
