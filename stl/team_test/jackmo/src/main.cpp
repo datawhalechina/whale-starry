@@ -1,3 +1,11 @@
+/*
+ * @Author: modi
+ * @Date: 2023-06-17 18:00:01
+ * @LastEditors: modi
+ * @LastEditTime: 2023-06-17 18:10:01
+ * @Description: file content
+ * @FilePath: \whale-starry\stl\team_test\jackmo\src\main.cpp
+ */
 #include <iostream>
 #include <vector>
 #include <string>
