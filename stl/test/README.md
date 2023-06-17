@@ -1,6 +1,6 @@
 # Team
 
-Team Name: Test
+Team Name: test
 
 Team Member: wsh-wood
 
