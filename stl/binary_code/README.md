@@ -2,7 +2,7 @@
 
 Team Name: binary_code
 
-Team Member: grassCarp7
+Team Member: grass_carp7
 
 ## Other
 
