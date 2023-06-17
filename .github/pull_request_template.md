@@ -10,7 +10,7 @@ Rename your pr title:
 
 -->
 
-### What?
+### What
 
 <!--
 - brief: 描述本次pr的内容简介
@@ -20,13 +20,11 @@ Rename your pr title:
 ### What changes are included in this PR?
 
 <!--
-当前pr包含了哪些文件变更?
+在这个pr包含什么?
 -->
 
 ### Are these changes tested?
 
 <!--
-是否对编写的代码进行过测试？
-或者
-是否对学习的开源项目测试？
+编写对应的issue测试文件与源代码逻辑?
 -->
