@@ -1,2 +1,6 @@
 .vscode
 .github
+*.out
+*.exe
+.DS_Store
+.jpg
