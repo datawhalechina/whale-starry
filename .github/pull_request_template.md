@@ -17,6 +17,10 @@ Rename your pr title:
 - author: 作者 
 -->
 
+    brief: Hello World Test PR
+    author: Rookie-Kai
+
+
 ### What changes are included in this PR?
 
 <!--
