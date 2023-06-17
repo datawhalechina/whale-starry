@@ -1,8 +1,8 @@
 # Team
 
-Team Name: fight_flow
+Team Name: team_aki
 
-Team Member: light-city
+Team Member: kai
 
 ## Other
 
