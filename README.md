@@ -9,4 +9,4 @@
 
 ### Are these changes tested?
 
-![](D:\GItlearnThree\whale-starry\stl\img\HelloWorld.png)
+![](https://github.com/yanchuner/whale-starry/blob/main/stl/img/HelloWorld.png)
