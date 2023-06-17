@@ -1,10 +1,6 @@
 # Team
 
-Team Name: fight_flow
+Team Name: norma
 
-Team Member: light-city
-
-## Other
-
-...
+Team Member: norma
 
