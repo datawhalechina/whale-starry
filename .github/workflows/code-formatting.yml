@@ -1,0 +1,26 @@
+name: Code Formatting Check
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Clang-Format
+      run: sudo apt-get install clang-format
+
+    - name: Format code
+      run: |
+        cd stl
+        make format
+        git diff --exit-code
+        
+    - name: Check code formatting
+      run: echo "Code formatting is correct."

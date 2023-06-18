@@ -26,9 +26,9 @@
 
 
 
-![](./img/day1.png)
+![](./img/team_day.png)
 
-![](./img/day2.png)
+![](./img/pr_day.png)
 
 ### 4.规范
 
@@ -52,3 +52,7 @@
 ### 4.4 pr规范
 
 请阅读[pr.md](./rules/pr.md)
+
+## 4.5 代码格式化
+
+所有提交代码，必须手动`make or make format`.
