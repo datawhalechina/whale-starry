@@ -4,9 +4,11 @@
 
 pr模版示例：[helloworld pr](https://github.com/datawhalechina/whale-starry/pull/1)
 
+<<<<<<< main
 PR title: [Team_Task]: Your Custom Title.
-
+=======
 for example: [fight_flow_1]: vector reading and adding test.
+>>>>>>> main
 
 ### What
 
