@@ -6,7 +6,7 @@ to contribute here:
   * [贡献规范](https://github.com/datawhalechina/whale-starry/blob/main/stl/README.md#4%E8%A7%84%E8%8C%83)
 
 Rename your pr title:
-    [Team_Task]: Your Custom Title.
+    [team_task]: Your Custom Title.
 
 -->
 
