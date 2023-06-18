@@ -1,6 +1,6 @@
 #include <iostream>
 
 int main() {
-    std::cout << "hello world" << std::endl;
+    std::cout << "it's code file" << std::endl;
     return 0;
 }
