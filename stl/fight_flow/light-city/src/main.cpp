@@ -4,7 +4,6 @@
 
 int main() {
   std::vector<char> data;
-
   std::string str = "Hello, World!";
   for (char c : str) {
     data.push_back(c);
