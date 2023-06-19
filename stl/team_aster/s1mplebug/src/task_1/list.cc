@@ -1,58 +1,58 @@
 // node struct with two pointers.
 struct _List_node_base {
-  _List_node_base *_M_next;
-  _List_node_base *_M_prev;
+  _List_node_base* _M_next;
+  _List_node_base* _M_prev;
 };
 
 // node struct with data value.
-template<typename _Tp>
-  struct _List_node : public _List_node_base {
-    _Tp _M_data;
-  };
+template <typename _Tp>
+struct _List_node : public _List_node_base {
+  _Tp _M_data;
+};
 
 // list iterator
-template<typename _Tp>
-  struct _List_iterator {
-    typedef _List_iterator<_Tp> _Self;
-    typedef _List_node<_Tp> _Node;
+template <typename _Tp>
+struct _List_iterator {
+  typedef _List_iterator<_Tp> _Self;
+  typedef _List_node<_Tp> _Node;
 
-    typedef _Tp value_type;
-    typedef _Tp * pointer;
-    typedef _Tp & reference;
+  typedef _Tp value_type;
+  typedef _Tp * pointer;
+  typedef _Tp & reference;
 
-    _List_node_base *_M_node;
+  _List_node_base *_M_node;
 
-    // two construct function.
-    _List_iterator() : _M_node() {}
-    explicit _List_iterator(_List_node_base *__x) : _M_node(__x) {}
+  // two construct function.
+  _List_iterator() : _M_node() {}
+  explicit _List_iterator(_List_node_base *__x) : _M_node(__x) {}
 
-    // return iterator self.
-    _Self _M_const_cast() const { return *this; }
+  // return iterator self.
+  _Self _M_const_cast() const { return *this; }
 
-    // operator functions.
-    reference operator*() const { return static_cast<_Node>(_M_node)->_M_data; }
-    // pointer operator->() const { return }
-    _Self &operator++() {
-      _M_node = _M_node->_M_next;
-      return *this;
-    }
-    _Self operator++(int) {
-      _Self __tmp = *this;
-      _M_node = _M_node->_M_next;
-      return __tmp;
-    }
-    _Self &operator--() {
-      _M_node = _M_node->_M_prev;
-      return *this;
-    }
-    _Self operator--(int) {
-      _Self __tmp = *this;
-      _M_node = _M_node->_M_prev;
-      return __tmp;
-    }
-    bool operator==(const _Self &__x) const { return _M_node == __x._M_node; }
-    bool operator!=(const _Self &__x) const { return _M_node != __x._M_node; }
-  };
+  // operator functions.
+  reference operator*() const { return static_cast<_Node>(_M_node)->_M_data; }
+  // pointer operator->() const { return }
+  _Self &operator++() {
+    _M_node = _M_node->_M_next;
+    return *this;
+  }
+  _Self operator++(int) {
+    _Self __tmp = *this;
+    _M_node = _M_node->_M_next;
+    return __tmp;
+  }
+  _Self &operator--() {
+    _M_node = _M_node->_M_prev;
+    return *this;
+  }
+  _Self operator--(int) {
+    _Self __tmp = *this;
+    _M_node = _M_node->_M_prev;
+    return __tmp;
+  }
+  bool operator==(const _Self &__x) const { return _M_node == __x._M_node; }
+  bool operator!=(const _Self &__x) const { return _M_node != __x._M_node; }
+};
 
 
 /**
@@ -186,7 +186,3 @@ template<typename _Tp, typename _Alloc = std::allocator<_Tp>>
     }
   };
 #endif
-
-int main() {
-  return 0;
-}
