@@ -11,7 +11,7 @@ UML绘制：https://online.visual-paradigm.com/cn/diagrams/features/uml-tool/
 
 ### 源码结构
 
-<img src="D:\list (1).png" alt="list (1)" style="zoom: 67%;" />
+<img src="./list (1).png" alt="list (1)" style="zoom: 67%;" />
 
 **链表节点**     `_List_node`, 继承自`_List_node_base`.
 
@@ -29,7 +29,7 @@ UML绘制：https://online.visual-paradigm.com/cn/diagrams/features/uml-tool/
 
 以`++`为例：
 
-<img src="C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20230619153438202.png" alt="image-20230619153438202" style="zoom:80%;" />
+<img src="./graph2.png" alt="image-20230619153438202" style="zoom:80%;" />
 
 
 
@@ -71,7 +71,7 @@ UML绘制：https://online.visual-paradigm.com/cn/diagrams/features/uml-tool/
 
 - 前加加的返回值是引用，而后加加的返回值不是引用，是为了统一C++中`++`的用法：
 
-  ![image-20230619155534286](C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20230619155534286.png)
+  ![image-20230619155534286](graph3.png)
 
 对迭代器取`*`是想取出里面的data，而不是一个节点。所以对\*也要重载
 
@@ -182,9 +182,9 @@ unfinished...
 
 ## 验证&测试（unfinished）
 
-1. 如果用sizeof取一个链表大小，结果应该是？
+1. 如果用sizeof取一个链表大小，结果应该是？https://github.com/gyfffffff/whale-starry/blob/main/stl/stari/gyfffffff/src/task_1/test1_1.cpp
 
-2. 可以将成员变量的声明放在最后，即先使用后声明。
+2. 可以将成员变量的声明放在最后，即先使用后声明。https://github.com/gyfffffff/whale-starry/blob/main/stl/stari/gyfffffff/src/task_1/test1_2.cpp
 3. iterator 的_M_node元素大小是8B。
 4. 验证list 是双向环状链表。
 
