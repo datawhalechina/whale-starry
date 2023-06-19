@@ -75,7 +75,7 @@ void transfer(iterator position, iterator first, iterator last) {
 
 19. transfer是非公开的接口 公开接口是splice
 20. transfer是完成merge(), reverse(), sort()在stl list源码的基石操作
-done!
+21. done!
 
 
 
