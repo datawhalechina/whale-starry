@@ -86,4 +86,5 @@ int main() {
   cal_emplace_back(test_copy);  // 1447.66ms
   std::cout << "This two ways for adding elements is kind of different.";
   std::cout << " And list.emplace_back method is kind of faster." << std::endl;
+  std::cout << "Happy List Ending!" << std::endl;
 }
