@@ -1,6 +1,6 @@
 ## The learning record of stl_list.
 
-### 简洁
+### 简介
 
 list 是一个双向环形链表，只需要一个指针，便可完整表现整个链表；在list中任何位置插入和删除的速度都很快。
 
