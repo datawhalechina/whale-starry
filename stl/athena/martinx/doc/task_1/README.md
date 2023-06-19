@@ -325,14 +325,12 @@ std::string Stock::HandleData(std::string& data) {
 
 ### 调用测试
 
-编写测试代码调用上诉方法，测试是否正常工作。
+编写测试代码调用上述方法，测试是否正常工作。
 
 ```cpp
 #include <iostream>
 #include <list>
 
-#include "httplib.h"
-#include "simdjson.h"
 #include "stock.h"
 
 /**
