@@ -1,8 +1,6 @@
 #include <iostream>
 #include <list>
 
-#include "httplib.h"
-#include "simdjson.h"
 #include "stock.h"
 
 /**
