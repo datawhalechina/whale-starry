@@ -2,9 +2,8 @@
 
 Team Name: stari
 
-Team Member: gyfffffff
+Team Member: 
 
-## Other
-
-...
-
+- burce_jay
+- gyfffffff
+- zxy
