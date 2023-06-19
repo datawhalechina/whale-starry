@@ -2,9 +2,13 @@
 
 提交PR请遵循以下规范，否则不合入主干!!!
 
+<<<<<<< main
 PR title: [Team_Task]: Your Custom Title.
+=======
+pr模版示例：[helloworld pr](https://github.com/datawhalechina/whale-starry/pull/1)
 
-for example: [fight_flow_1]: vector reading and adding test.
+PR title: [team_task]: Your Custom Title.
+>>>>>>> main
 
 ### What
 
