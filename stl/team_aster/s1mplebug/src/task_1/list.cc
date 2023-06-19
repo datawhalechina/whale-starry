@@ -17,14 +17,14 @@ struct _List_iterator {
   typedef _List_node<_Tp> _Node;
 
   typedef _Tp value_type;
-  typedef _Tp * pointer;
-  typedef _Tp & reference;
+  typedef _Tp* pointer;
+  typedef _Tp& reference;
 
-  _List_node_base *_M_node;
+  _List_node_base* _M_node;
 
   // two construct function.
   _List_iterator() : _M_node() {}
-  explicit _List_iterator(_List_node_base *__x) : _M_node(__x) {}
+  explicit _List_iterator(_List_node_base* __x) : _M_node(__x) {}
 
   // return iterator self.
   _Self _M_const_cast() const { return *this; }
@@ -32,7 +32,7 @@ struct _List_iterator {
   // operator functions.
   reference operator*() const { return static_cast<_Node>(_M_node)->_M_data; }
   // pointer operator->() const { return }
-  _Self &operator++() {
+  _Self& operator++() {
     _M_node = _M_node->_M_next;
     return *this;
   }
@@ -41,7 +41,7 @@ struct _List_iterator {
     _M_node = _M_node->_M_next;
     return __tmp;
   }
-  _Self &operator--() {
+  _Self& operator--() {
     _M_node = _M_node->_M_prev;
     return *this;
   }
@@ -50,8 +50,8 @@ struct _List_iterator {
     _M_node = _M_node->_M_prev;
     return __tmp;
   }
-  bool operator==(const _Self &__x) const { return _M_node == __x._M_node; }
-  bool operator!=(const _Self &__x) const { return _M_node != __x._M_node; }
+  bool operator==(const _Self& __x) const { return _M_node == __x._M_node; }
+  bool operator!=(const _Self& __x) const { return _M_node != __x._M_node; }
 };
 
 
