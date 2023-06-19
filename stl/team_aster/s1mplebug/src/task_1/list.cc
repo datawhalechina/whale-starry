@@ -54,7 +54,6 @@ struct _List_iterator {
   bool operator!=(const _Self& __x) const { return _M_node != __x._M_node; }
 };
 
-
 /**
  * 定义容器空间配置器
  **/
