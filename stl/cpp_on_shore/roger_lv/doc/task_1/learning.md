@@ -102,3 +102,7 @@
         }
       ```
     - 我们通常会使用一个const将右值绑定到左值引用上`const int& size = 1000`
+
+- **以下是我代码的整体测试输出**
+
+  ![img](https://rogerlv51.blob.core.windows.net/images/list_test.png)
