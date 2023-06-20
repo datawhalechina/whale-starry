@@ -191,17 +191,45 @@ template<typename _Tp, typename _Alloc = std::allocator<_Tp>>
 #include <ctime>
 #include <iostream>
 #include <list>
+#include <algorithm>
+#include <functional>
 
-// 以下为12次测试结果，单位秒
-// 0.9068 0.8604 0.8007 0.8015 0.7883 1.2490 1.1146 0.9116 0.8705 0.8698 0.8731 0.8779
+// 以下为测试结果，单位秒
+// 1.9787 2.6895 2.1298
 void test_list_insert(std::list<int>& l) {
-  clock_t stime = clock();
   for (int i = 0; i < (int)1e7; ++i) l.push_back(i);
-  std::cout << (double)(clock() - stime) / CLOCKS_PER_SEC << std::endl;
+}
+
+// 在1e7个数中找随机数，时间单位秒
+// 1.3307 3.0759 0.6905
+void test_list_search(std::list<int>& l) {
+  int t;
+  srand((unsigned)time(NULL));
+  t = rand() % (int)1e7;
+  std::find(l.begin(), l.end(), t);
+}
+
+// 从小到大排序
+// 找0花费时间：4e-06 找1e7-1花费时间：0.8823 找中间位置花费的时间：0.3623
+void test_sorted_list_search(std::list<int>& l) {
+  std::find(l.begin(), l.end(), (int)(1e7 - 1) / 2);
 }
 
 int main() {
   std::list<int> l;
-  test_list_insert(l);
+  clock_t stime = clock();
+  test_list_insert(l); // 插入1e7个数据
+  std::cout << (double)(clock() - stime) / CLOCKS_PER_SEC << std::endl;
+
+  stime = clock();
+  test_list_search(l); // 在1e7个数据中找随机数
+  std::cout << (double)(clock() - stime) / CLOCKS_PER_SEC << std::endl;
+
+  l.sort(std::less<int>());
+  stime = clock();
+  test_sorted_list_search(l);
+  std::cout << (double)(clock() - stime) / CLOCKS_PER_SEC << std::endl;
+
+
   return 0;
 }
