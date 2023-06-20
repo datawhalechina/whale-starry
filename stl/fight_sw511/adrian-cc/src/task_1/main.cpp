@@ -1,6 +1,6 @@
+#include <chrono>
 #include <iostream>
 #include <list>
-#include <chrono>
 
 void testPrefixDecrementPerformance(int dataSize, int iterations) {
   std::list<int> myList;
@@ -21,7 +21,7 @@ void testPrefixDecrementPerformance(int dataSize, int iterations) {
 
   auto endTime = std::chrono::high_resolution_clock::now();
   auto duration =
-    std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
+      std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
 
   std::cout << "前置递减性能: " << duration << " us." << std::endl;
 }
