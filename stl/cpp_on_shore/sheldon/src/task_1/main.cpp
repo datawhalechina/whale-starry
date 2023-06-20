@@ -20,12 +20,11 @@ void TestPushBack(int num) {
   }
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto temp =
-      std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  auto temp1 = end - start;
+  auto temp = std::chrono::duration_cast<std::chrono::microseconds>(temp1);
   auto duration = temp.count();
   std::cout << "push_back performance: " << std::endl;
-  std::cout << "inserting " << num << " elems needs " << duration << " us"
-            << std::endl;
+  std::cout << "inserting duration: " << duration << " us" << std::endl;
 }
 
 // 测试emplace_back的性能
@@ -38,12 +37,11 @@ void TestEmplaceBack(int numIterations) {
   }
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration =
-      std::chrono::duration_cast<std::chrono::microseconds>(end - start)
-          .count();
-  std::cout << "emplace_back performance:"
-            << "inserting " << numIterations << " elems needs " << duration
-            << " us" << std::endl;
+  auto temp1 = end - start;
+  auto temp = std::chrono::duration_cast<std::chrono::microseconds>(temp1);
+  auto duration = temp.count();
+  std::cout << "emplace_back performance: " << std::endl;
+  std::cout << "inserting duration: " << duration << " us" << std::endl;
 }
 
 int main() {
