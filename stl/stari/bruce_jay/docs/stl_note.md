@@ -32,13 +32,13 @@ using std::out;
 
 list 是一个环状双向链表。
 
-![image-20230619223159513](../../images/image-20230619223159513.png)
+![image-20230619223159513](../images/list_structure.png)
 
 为了实现一个“智能的”双向链表，iterator 需要连续迭代地运行，也就是说，在我取到 prev pointer 的时候，我可以读取到其对应节点的 next pointer 的值，然后取出 next pointer 指向的指针。
 
 所以我们的 iterator 需要用一个类来定义。为了供应给所有的使用者，所有的容器都必须要有一个 typedef。（虽然在这里不太理解是为什么，因为自己所理解的 typedef 就是 struct 类中的，回去查一下吧。我的理解是，iterator 就是一个用于创建 \__list\_iterator 的模板类
 
-![image-20230620000731648](../../images/image-20230620000731648.png)
+![image-20230620000731648](../images/list_class.png)
 
 后面发现确实是 struct 的（） 不过自己觉得还是需要去复习一下。
 
@@ -53,7 +53,7 @@ struct __list_iterator {
 }
 ```
 
-![image-20230620001315854](../../images/image-20230620001315854.png)
+![image-20230620001315854](../images/list_node_struct.png)
 
 于是我们可以完整地实现出 \__list\_iterator 结构体
 
@@ -92,7 +92,7 @@ node 是一个指针，这段代码的作用是把 node 里面的 next 指针取
 
 这样就实现了node 的++
 
-![image-20230620002804586](../../images/image-20230620002804586.png)
+![image-20230620002804586](../images/node_plus_action.png)
 
 ```c++
 self operator++(int)
@@ -107,10 +107,10 @@ self operator++(int)
 
 这里在原视频25分钟的时候，还没有太看懂，回过去再看看吧
 
-![image-20230620003555197](../../images/image-20230620003555197.png)
+![image-20230620003555197](../images/operator_two_impl.png)
 
 星号的用意：取出data
 
-![image-20230620003638458](../../images/image-20230620003638458.png)
+![image-20230620003638458](../images/operator_example.png)
 
 箭头的用意，就是一个对于一个`指针指向的地方的值` 进行操作，而星号的操作对象是一个结构体而不是指针。
