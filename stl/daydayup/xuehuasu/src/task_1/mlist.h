@@ -81,6 +81,16 @@ struct List {
       begin++;
     }
   }
+  ~List() {
+    iterator begin = this->begin();
+    iterator end = this->end();
+    while (iterator it = begin; it != end;) {
+      begin++;
+      erase(it);
+      it = begin;
+    }
+    delete (this->head);
+  }
 
   void push_back(const _Tp& value) { insert(end(), value); }
   void push_front(const _Tp& value) { insert(begin(), value); }
@@ -122,16 +132,6 @@ struct List {
     head = new List_node_base();
     head->next = head;
     head->prev = head;
-  }
-  void print() {
-    iterator begin = this->begin();
-    iterator end = this->end();
-    while (begin != end) {
-      node* temp = static_cast<node*>(begin.cur);
-      printf("%d ", (int)(temp->data));
-      begin++;
-    }
-    printf("\n");
   }
 
   List_node_base* head;
