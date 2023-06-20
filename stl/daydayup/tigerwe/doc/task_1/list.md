@@ -69,6 +69,16 @@ struct _List_node : public __detail::_List_node_base {
 
 ### 2、**迭代器，主要是实现++和--等操作符重载，实现链表节点的前后移动。**
 
+迭代器需要遵循的原则就是，满足算法的要求，其中使用了iterator traits，通过添加一个中间层，将class iterator和 non-class iterator统一起来。
+
+iterator traits被称为**特性萃取机**，能够方便的让外界获取以下5种型别：
+
+- value_type：迭代器所指对象的型别
+- difference_type：两个迭代器之间的距离
+- pointer：迭代器所指向的型别
+- reference：迭代器所引用的型别
+- iterator_category：是一种分类（移动的性质， 比如一次移动一个，或者一次移动多个等）
+
 ```c++
 template <typename _Tp>
 struct _List_iterator {
@@ -134,7 +144,7 @@ struct _List_iterator {
 
 ### 3、**链表数据结构**
 
-实现类 _List_impl，主要用来维护链表节点，然后list类包含该类
+#### 实现类 _List_impl，主要用来维护链表节点，然后list类包含该类
 
 ```c++
 struct _List_impl : public _Node_alloc_type {
@@ -154,7 +164,7 @@ struct _List_impl : public _Node_alloc_type {
   };
 ```
 
-_List_base类
+#### _List_base类
 
 ```c++
 /// See bits/stl_deque.h's _Deque_base for an explanation.
@@ -238,12 +248,14 @@ class _List_base {
 };
 ```
 
-list类  只截取可以体现list代码结构的一部分，具体接口实现看源码！
+#### list类  只截取可以体现list代码结构的一部分，具体接口实现看源码！
+
+**list继承_List_base**
 
 ```c++
 template <typename _Tp, typename _Alloc = std::allocator<_Tp>>
 class list : protected _List_base<_Tp, _Alloc> {
-  // concept requirements
+    // concept requirements
   typedef typename _Alloc::value_type _Alloc_value_type;
   __glibcxx_class_requires(_Tp, _SGIAssignableConcept)
       __glibcxx_class_requires2(_Tp, _Alloc_value_type, _SameTypeConcept)
@@ -276,8 +288,217 @@ class list : protected _List_base<_Tp, _Alloc> {
   using _Base::_M_get_Tp_allocator;
   using _Base::_M_impl;
   using _Base::_M_put_node;
-  
   .............
 };
 ```
 
+**双向环形链表实现**
+
+【构造函数】
+
+```c++
+/**
+*  @brief  Creates a %list with no elements.
+*  @param  __a  An allocator object.
+*/
+explicit list(const allocator_type& __a) _GLIBCXX_NOEXCEPT
+  : _Base(_Node_alloc_type(__a)) {}
+
+
+/**
+*  @brief  Creates a %list with default constructed elements.
+*  @param  __n  The number of elements to initially create.
+*
+*  This constructor fills the %list with @a __n default
+*  constructed elements.
+*/
+explicit list(size_type __n) : _Base() { _M_default_initialize(__n); }
+
+/**
+*  @brief  Creates a %list with copies of an exemplar element.
+*  @param  __n  The number of elements to initially create.
+*  @param  __value  An element to copy.
+*  @param  __a  An allocator object.
+*
+*  This constructor fills the %list with @a __n copies of @a __value.
+*/
+list(size_type __n, const value_type& __value,
+   const allocator_type& __a = allocator_type())
+  : _Base(_Node_alloc_type(__a)) {
+	_M_fill_initialize(__n, __value);}
+
+/**
+*  @brief  %List copy constructor.
+*  @param  __x  A %list of identical element and allocator types.
+*
+*  The newly-created %list uses a copy of the allocation object used
+*  by @a __x.
+*/
+list(const list& __x) : _Base(__x._M_get_Node_allocator()) {
+	_M_initialize_dispatch(__x.begin(), __x.end(), __false_type());}
+
+/**
+*  @brief  %List move constructor.
+*  @param  __x  A %list of identical element and allocator types.
+*
+*  The newly-created %list contains the exact contents of @a __x.
+*  The contents of @a __x are a valid, but unspecified %list.
+*/
+list(list&& __x) noexcept : _Base(std::move(__x)) {}
+
+................
+
+```
+
+【创建节点】
+
+```c++
+template <typename... _Args>
+_Node* _M_create_node(_Args&&... __args) {
+    _Node* __p = this->_M_get_node();
+    __try 
+    {
+      // 这个是构造对象 _M_get_Node_allocator()是一个分配器， __p是一个指针，__args是构造参数 
+      _M_get_Node_allocator().construct(__p, std::forward<_Args>(__args)...);
+    }
+    __catch(...) 
+    {
+      _M_put_node(__p);
+      __throw_exception_again;
+    }
+    return __p;
+}
+```
+
+这里面有两个重要的函数`_M_get_node`和`_M_put_node`，作用就是分配和释放内存，它们来自基类_List_base：
+
+```c++
+_List_node<_Tp>* _M_get_node() {
+    // _M_impl._Node_alloc_type  An allocator
+    // 1 The number of objects to allocate space for
+	return _M_impl._Node_alloc_type::allocate(1);
+}
+void _M_put_node(_List_node<_Tp>* __p) _GLIBCXX_NOEXCEPT {
+    _M_impl._Node_alloc_type::deallocate(__p, 1);
+}
+```
+
+【插入节点】
+
+函数`_M_fill_initialize` -> `push_back` -> `_M_insert` -> `_M_hook`(太难找了！)`_M_hook`实现在`gcc-4.9.1/libstdc++-v3/src/c++98/list.cc`中。
+
+```c++
+void _M_fill_initialize(size_type __n, const value_type& __x) {
+    for (; __n; --__n) push_back(__x);
+}
+
+void push_back(const value_type& __x) { this->_M_insert(end(), __x); }
+
+template <typename... _Args>
+void _M_insert(iterator __position, _Args&&... __args) {
+    _Node* __tmp = _M_create_node(std::forward<_Args>(__args)...);
+    __tmp->_M_hook(__position._M_node);
+}
+
+void _List_node_base::_M_hook(_List_node_base* const __position)
+    _GLIBCXX_USE_NOEXCEPT {
+    this->_M_next = __position;
+    this->_M_prev = __position->_M_prev;
+    __position->_M_prev->_M_next = this;
+    __position->_M_prev = this;
+}
+```
+
+【删除节点】
+
+通过迭代器删除，对应函数为_M_erase， 其中`_M_unhook`实现在`gcc-4.9.1/libstdc++-v3/src/c++98/list.cc`
+
+```c++
+void pop_back() _GLIBCXX_NOEXCEPT {
+    this->_M_erase(iterator(this->_M_impl._M_node._M_prev));
+}
+
+// Erases element at position given.
+  void _M_erase(iterator __position) _GLIBCXX_NOEXCEPT {
+    __position._M_node->_M_unhook();
+    _Node* __n = static_cast<_Node*>(__position._M_node);
+#if __cplusplus >= 201103L
+    _M_get_Node_allocator().destroy(__n);
+#else
+    _M_get_Tp_allocator().destroy(std::__addressof(__n->_M_data));
+#endif
+    _M_put_node(__n);
+  }
+
+void _List_node_base::_M_unhook() _GLIBCXX_USE_NOEXCEPT {
+  _List_node_base* const __next_node = this->_M_next;       // 第一步：保存后继节点
+  _List_node_base* const __prev_node = this->_M_prev;       // 第二步：保存前驱节点
+  __prev_node->_M_next = __next_node;                       
+  __next_node->_M_prev = __prev_node;
+}
+
+```
+
+删除所有元素  clear（）
+
+```c++
+/**
+*  Erases all the elements.  Note that this function only erases
+*  the elements, and that if the elements themselves are
+*  pointers, the pointed-to memory is not touched in any way.
+*  Managing the pointer is the user's responsibility.
+*/
+void clear() _GLIBCXX_NOEXCEPT {
+    _Base::_M_clear();
+    _Base::_M_init();
+}
+
+template <typename _Tp, typename _Alloc>
+void _List_base<_Tp, _Alloc>::_M_clear() _GLIBCXX_NOEXCEPT {
+  typedef _List_node<_Tp> _Node;
+  _Node* __cur = static_cast<_Node*>(_M_impl._M_node._M_next);
+  while (__cur != &_M_impl._M_node) {						// while循环
+    _Node* __tmp = __cur;									// 保存节点
+    __cur = static_cast<_Node*>(__cur->_M_next);            // 往后遍历
+#if __cplusplus >= 201103L
+    _M_get_Node_allocator().destroy(__tmp);
+#else
+    _M_get_Tp_allocator().destroy(std::__addressof(__tmp->_M_data));
+#endif
+    _M_put_node(__tmp);                                     // 释放内存
+  }
+}
+// 全部指向自己
+void _M_init() _GLIBCXX_NOEXCEPT {
+    this->_M_impl._M_node._M_next = &this->_M_impl._M_node;
+    this->_M_impl._M_node._M_prev = &this->_M_impl._M_node;
+}
+```
+
+【元素访问】
+
+每个都实现了两个版本：引用与常引用。
+
+- front 返回第一个元素
+
+```c++
+reference front() _GLIBCXX_NOEXCEPT { return *begin(); }
+const_reference front() const _GLIBCXX_NOEXCEPT { return *begin(); }
+```
+
+- 返回最后一个元素
+
+```c++
+reference back() _GLIBCXX_NOEXCEPT {
+    iterator __tmp = end();
+    --__tmp;
+    return *__tmp;
+}
+const_reference back() const _GLIBCXX_NOEXCEPT {
+    const_iterator __tmp = end();
+    --__tmp;
+    return *__tmp;
+}
+```
+
+还有一些算法类的，后续有时间再看看.....
