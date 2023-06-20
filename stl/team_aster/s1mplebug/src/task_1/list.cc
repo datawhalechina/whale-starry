@@ -227,7 +227,7 @@ int main() {
 
   l.sort(std::less<int>());
   stime = clock();
-  test_sorted_list_search(l);  // 在有序链表中分别计算头部搜索时间 中间搜索时间 尾部搜索时间
+  test_sorted_list_search(l);  // 有序链表计算头部、中间、尾部搜索时间
   std::cout << (double)(clock() - stime) / CLOCKS_PER_SEC << std::endl;
 
   return 0;
