@@ -188,17 +188,16 @@ template<typename _Tp, typename _Alloc = std::allocator<_Tp>>
   };
 #endif
 
+#include <ctime>
 #include <iostream>
 #include <list>
-#include <ctime>
 
 // 以下为12次测试结果，单位秒
 // 0.9068 0.8604 0.8007 0.8015 0.7883 1.2490 1.1146 0.9116 0.8705 0.8698 0.8731 0.8779
-void test_list_insert(std::list<int> &l) {
+void test_list_insert(std::list<int>& l) {
   clock_t stime = clock();
-  for(int i = 0; i < (int)1e7; ++i)
-    l.push_back(i);
-  std::cout << (double)(clock()-stime) / CLOCKS_PER_SEC << std::endl;
+  for (int i = 0; i < (int)1e7; ++i) l.push_back(i);
+  std::cout << (double)(clock() - stime) / CLOCKS_PER_SEC << std::endl;
 }
 
 int main() {
