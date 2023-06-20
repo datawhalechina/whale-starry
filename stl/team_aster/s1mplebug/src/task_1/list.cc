@@ -188,11 +188,11 @@ template<typename _Tp, typename _Alloc = std::allocator<_Tp>>
   };
 #endif
 
+#include <algorithm>
 #include <ctime>
+#include <functional>
 #include <iostream>
 #include <list>
-#include <algorithm>
-#include <functional>
 
 // 以下为测试结果，单位秒
 // 1.9787 2.6895 2.1298
@@ -218,18 +218,17 @@ void test_sorted_list_search(std::list<int>& l) {
 int main() {
   std::list<int> l;
   clock_t stime = clock();
-  test_list_insert(l); // 插入1e7个数据
+  test_list_insert(l);  // 插入1e7个数据
   std::cout << (double)(clock() - stime) / CLOCKS_PER_SEC << std::endl;
 
   stime = clock();
-  test_list_search(l); // 在1e7个数据中找随机数
+  test_list_search(l);  // 在1e7个数据中找随机数
   std::cout << (double)(clock() - stime) / CLOCKS_PER_SEC << std::endl;
 
   l.sort(std::less<int>());
   stime = clock();
-  test_sorted_list_search(l);
+  test_sorted_list_search(l);  // 在有序链表中分别计算头部搜索时间 中间搜索时间 尾部搜索时间
   std::cout << (double)(clock() - stime) / CLOCKS_PER_SEC << std::endl;
-
 
   return 0;
 }
