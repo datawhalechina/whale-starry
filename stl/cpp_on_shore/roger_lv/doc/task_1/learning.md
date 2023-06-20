@@ -1,4 +1,9 @@
-## 第一天小试牛刀-list学习笔记
+## 小试牛刀-list学习笔记
+
+- **STL基本框架**
+  ![img](https://rogerlv51.blob.core.windows.net/images/stl_component.png)
+  ![img](https://rogerlv51.blob.core.windows.net/images/stl_basic.png)
+
 
 - **关于list在gcc中的基础介绍：**
     A standard container with linear time access to elements, and fixed time insertion/deletion at any point in the sequence.
@@ -84,3 +89,16 @@
     - **操作符重载函数**
       - operator==：List equality comparison.
       - operator<：List ordering relation.
+
+- **一些基础知识补充**
+    - **右值引用的作用：**节省内存空间，提高效率，减少内存拷贝 &&，对于T&&为万能引用既能接收左值也能接收右值
+    - **std::move移动语义的作用：**把一个左值转化成右值，也是为了节省内存空间
+    - 我们通常在自己构造类的时候会引入一个移动构造函数，可避免在初始化的时候同时调用构造和拷贝构造，节省空间
+      ```Cpp
+        DataBlock(DataBlock&& db) noexcept {
+          this->data = db.data;
+          db.data = nullptr;
+          cout << "Move Constructor being invoked!" << endl;
+        }
+      ```
+    - 我们通常会使用一个const将右值绑定到左值引用上`const int& size = 1000`
