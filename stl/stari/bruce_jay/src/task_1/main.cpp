@@ -8,18 +8,18 @@ class A {
 
  public:
   A(int n_) { n = n_; }
-  friend bool operator<(const A &a1, const A &a2);
-  friend bool operator==(const A &a1, const A &a2);
-  friend std::ostream &operator<<(std::ostream &o, const A &a);
+  friend bool operator<(const A& a1, const A& a2);
+  friend bool operator==(const A& a1, const A& a2);
+  friend std::ostream& operator<<(std::ostream& o, const A& a);
 };
-bool operator<(const A &a1, const A &a2) { return a1.n < a2.n; }
-bool operator==(const A &a1, const A &a2) { return a1.n == a2.n; }
-std::ostream &operator<<(std::ostream &o, const A &a) {
+bool operator<(const A& a1, const A& a2) { return a1.n < a2.n; }
+bool operator==(const A& a1, const A& a2) { return a1.n == a2.n; }
+std::ostream& operator<<(std::ostream& o, const A& a) {
   o << a.n;
   return o;
 }
 template <class T>
-void PrintList(const std::list<T> &lst) {
+void PrintList(const std::list<T>& lst) {
   // 不推荐的写法，还是用两个迭代器作为参数更好
   int tmp = lst.size();
   if (tmp > 0) {
