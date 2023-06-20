@@ -1,26 +1,45 @@
-#include <algorithm>
+#include "tiny_list.hpp"
+
 #include <iostream>
-#include <list>
+
+using namespace __tiny_stl;
+
+template <typename T>
+void print_list(List<T>& l) {
+  if (l.empty()) {
+    std::cout << "list is empty!" << std::endl;
+    return;
+  }
+
+  auto iter = l.begin();
+  while (iter != l.end()) {
+    std::cout << *iter << " ";
+    ++iter;
+  }
+  std::cout << std::endl;
+}
 
 int main() {
   // 创建含整数的 list
-  std::list<int> l = {7, 5, 16, 8};
+  List<int> l;
 
   // 添加整数到 list 开头
-  l.push_front(25);
+  for (int i = 4; i >= 0; --i) {
+    l.push_front(i);
+  }
+
   // 添加整数到 list 结尾
-  l.push_back(13);
+  for (int i = 5; i < 10; ++i) {
+    l.push_back(i);
+  }
 
-  // 以搜索插入 16 前的值
-  auto it = std::find(l.begin(), l.end(), 16);
-  if (it != l.end())
-    l.insert(it, 42);
+  print_list(l);
 
-  // 迭代并打印 list 的值
-  std::cout << "l = { ";
-  for (int n : l)
-    std::cout << n << ", ";
-  std::cout << "};" << std::endl;
+  for (int i = 0; i < 5; i++) {
+    l.pop_front();
+    l.pop_back();
+    print_list(l);
+  }
 
   return 0;
 }
