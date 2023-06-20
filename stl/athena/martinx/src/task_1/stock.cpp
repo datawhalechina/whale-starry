@@ -5,19 +5,20 @@
 #include "httplib.h"
 #include "simdjson.h"
 
+#define STOCK_SERVER_HOST "yunhq.sse.com.cn"
+#define STOCK_SERVER_PORT 32041
+#define STOCK_FIELDS "time,price,volume,avg_price,amount,highest,lowest"
+
 // 使用股票代码初始化
 Stock::Stock(const std::string& code) { this->code = code; };
 
 // 获取股票最后一个交易日的分钟K线数据
 std::string Stock::GetData() {
-  std::string fields = "time,price,volume,avg_price,amount,highest,lowest";
-
   // 创建 HTTP 客户端
-  httplib::Client cli("yunhq.sse.com.cn", 32041);
+  httplib::Client cli(STOCK_SERVER_HOST, STOCK_SERVER_PORT);
 
   // 发送请求
-  auto res = cli.Get("/v1/sh1/line/" + this->code +
-                     "?callback=&select=" + fields + "&_=1687183788521");
+  auto res = cli.Get(GetStockServerEndpoint(this->code));
 
   // 如果请求成功，打印结果
   if (res && res->status == 200) {
@@ -80,4 +81,8 @@ std::string Stock::HandleData(std::string& data) {
   }
 
   return "{}";
+}
+
+std::string GetStockServerEndpoint(const std::string& code) {
+  return "/v1/sh1/line/" + code + "?callback=&select=" + STOCK_FIELDS;
 }
