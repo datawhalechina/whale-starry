@@ -46,3 +46,41 @@ class MyList {
     return os;
   }
 };
+
+// 使用list玩一些小东西，以NBA球员为例
+class Player {
+ private:
+  int height;
+  int weight;
+  int age;
+  std::string name;
+  std::string team;
+  std::string position;
+  std::string style;
+
+ public:
+  // 设置基础信息，身高、体重、年龄、姓名、所属球队、打的位置和球风
+  void SetBasicInfo(int h, int w, int a, std::string n, std::string t, std::string p,
+                    std::string s) {
+    height = h;
+    weight = w;
+    age = a;
+    name = n;
+    team = t;
+    position = p;
+    style = s;
+  }
+  // 打印基本信息
+  void PrintBasicInfo() {
+    std::cout << "Playername = " << name << " ";
+    std::cout << "Height = " << height << " ";
+    std::cout << "Weight = " << weight << " ";
+    std::cout << "Age = " << age << " ";
+    std::cout << "His team = " << team << " ";
+    std::cout << "Position = " << position << " ";
+    std::cout << "Style = " << style << " ";
+    std::cout << std::endl;
+  }
+  // 获取球员身高
+  int GetHeight() { return height; }
+};
