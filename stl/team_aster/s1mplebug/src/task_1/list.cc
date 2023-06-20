@@ -1,3 +1,4 @@
+#if 0
 // node struct with two pointers.
 struct _List_node_base {
   _List_node_base* _M_next;
@@ -53,6 +54,7 @@ struct _List_iterator {
   bool operator==(const _Self& __x) const { return _M_node == __x._M_node; }
   bool operator!=(const _Self& __x) const { return _M_node != __x._M_node; }
 };
+#endif
 
 /**
  * 定义容器空间配置器
@@ -185,3 +187,22 @@ template<typename _Tp, typename _Alloc = std::allocator<_Tp>>
     }
   };
 #endif
+
+#include <iostream>
+#include <list>
+#include <ctime>
+
+// 以下为12次测试结果，单位秒
+// 0.9068 0.8604 0.8007 0.8015 0.7883 1.2490 1.1146 0.9116 0.8705 0.8698 0.8731 0.8779
+void test_list_insert(std::list<int> &l) {
+  clock_t stime = clock();
+  for(int i = 0; i < (int)1e7; ++i)
+    l.push_back(i);
+  std::cout << (double)(clock()-stime) / CLOCKS_PER_SEC << std::endl;
+}
+
+int main() {
+  std::list<int> l;
+  test_list_insert(l);
+  return 0;
+}
