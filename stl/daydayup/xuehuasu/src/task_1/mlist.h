@@ -1,5 +1,6 @@
 #include <iostream>
 
+// 节点基类，定义了节点的指针
 struct List_node_base {
   List_node_base* next;
   List_node_base* prev;
@@ -8,15 +9,45 @@ struct List_node_base {
     next = x->next;
     prev = x->prev;
   }
+
+  // 在pos的位置插入this
+  void m_hook(List_node_base* position) {
+    this->next = position;
+    this->prev = position->prev;
+    position->prev->next = this;
+    position->prev = this;
+  }
+
+  // 删除this
+  void m_uhook() {
+    this->next->prev = this->prev;
+    this->prev->next = this->next;
+  }
+  // 将连续的[begin,end)插入在this之前
+  void m_transfer(List_node_base* begin, List_node_base* end) {
+    List_node_base* this_prev = this->prev;
+
+    this->prev = end->prev;
+    end->prev->next = this;
+    end->prev = begin->prev;
+
+    this_prev->next = begin;
+    begin->prev->next = end;
+    begin->prev = this_prev;
+  }
 };
 
+// 节点类，定义数据部分
 template <typename _Tp>
 struct List_node : public List_node_base {
   _Tp data;
+  List_node() {}
+  List_node(_Tp x) { data = x; }
   _Tp* val() { return &data; }
   _Tp const* val() const { return &data; }
 };
 
+// 定义迭代器
 template <typename _Tp>
 struct List_iterator {
   typedef List_iterator<_Tp> Self;
@@ -67,33 +98,35 @@ struct List_iterator {
 
 template <typename _Tp>
 struct List {
+  typedef List<_Tp> list;
   typedef List_iterator<_Tp> iterator;
   typedef List_node<_Tp> node;
   typedef List_node_base basenode;
 
+  // 空构造
   List() { init(); }
-  List(const List<_Tp>& t) {
-    iterator begin = t.begin();
-    iterator end = t.end();
-    while (begin != end) {
-      node* temp = static_cast<node*>(begin.node);
-      this->push_back(temp.data);
-      begin++;
+
+  // 从范围构造
+  List(const iterator& beg, const iterator& end) {
+    init();
+    for (iterator it = beg; it != end; it++) {
+      this->push_back(*it);
     }
   }
+
   ~List() {
-    iterator begin = this->begin();
-    iterator end = this->end();
-    while (iterator it = begin; it != end;) {
-      begin++;
-      erase(it);
-      it = begin;
+    while (!empty()) {
+      // std::cout << "delele: " << *(begin()) << ' ';
+      erase(begin());
     }
     delete (this->head);
+    // std::cout << "~list end" << std::endl;
   }
 
   void push_back(const _Tp& value) { insert(end(), value); }
+
   void push_front(const _Tp& value) { insert(begin(), value); }
+
   void pop_front() { erase(begin()); }
 
   void pop_back() {
@@ -101,32 +134,33 @@ struct List {
     erase(--tmp);
   }
 
-  iterator insert(iterator position, const _Tp& x) {
-    node* tmp = new node();
-    tmp->data = x;
-    tmp->next = position.cur;
-    tmp->prev = position.cur->prev;
-    position.cur->prev->next = tmp;
-    position.cur->prev = tmp;
+  iterator insert(const iterator& position, const _Tp& x) {
+    node* tmp = new node(x);
+    tmp->m_hook(position.cur);
 
     return iterator(tmp);
   }
 
+  // 在pos位置之前插入一串
+  void insert(iterator position, const iterator& begin, const iterator& end) {
+    if (begin == end) return;
+    list list_tmp(begin, end);
+    position.cur->m_transfer(list_tmp.begin().cur, list_tmp.end().cur);
+  }
+
   iterator erase(iterator position) {
     basenode* next_node = position.cur->next;
-    basenode* prev_node = position.cur->prev;
-    prev_node->next = next_node;
-    next_node->prev = prev_node;
-
+    position.cur->m_uhook();
     delete position.cur;
     position.cur = 0;
-
     return iterator(next_node);
   }
 
   iterator begin() { return iterator(head->next); }
 
   iterator end() { return iterator(head); }
+
+  bool empty() { return begin() == end(); }
 
   void init() {
     head = new List_node_base();
