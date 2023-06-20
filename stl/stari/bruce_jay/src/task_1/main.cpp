@@ -1,6 +1,6 @@
 #include <algorithm>
-#include <list>
 #include <iostream>
+#include <list>
 
 class A {
  private:
