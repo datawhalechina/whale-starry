@@ -1,6 +1,6 @@
+#include <chrono>
 #include <iostream>
 #include <list>
-#include <chrono>
 
 // 输出列表中的所有元素
 void PrintList(const std::list<int>& mylist) {
@@ -20,9 +20,12 @@ void TestPushBack(int numIterations) {
   }
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+  auto duration =
+      std::chrono::duration_cast<std::chrono::microseconds>(end - start)
+          .count();
   std::cout << "push_back performance: "
-       << "inserting " << numIterations << " elems needs " << duration << " us" << std::endl;
+            << "inserting " << numIterations << " elems needs " << duration
+            << " us" << std::endl;
 }
 
 // 测试emplace_back的性能
@@ -35,9 +38,12 @@ void TestEmplaceBack(int numIterations) {
   }
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+  auto duration =
+      std::chrono::duration_cast<std::chrono::microseconds>(end - start)
+          .count();
   std::cout << "emplace_back performance:"
-       << "inserting " << numIterations << " elems needs " << duration << " us" << std::endl;
+            << "inserting " << numIterations << " elems needs " << duration
+            << " us" << std::endl;
 }
 
 int main() {
@@ -100,10 +106,10 @@ int main() {
   int numIterations = 1000000;
 
   // push_back() 114235 us 109961 us 130216 us
-  TestPushBack(numIterations); 
+  TestPushBack(numIterations);
 
   // emplace_back() 94060 us 98405 us 103185 us, emplace_back() 更快.
-  TestEmplaceBack(numIterations); //
+  TestEmplaceBack(numIterations);  //
 
   return 0;
 }
