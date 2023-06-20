@@ -24,7 +24,7 @@ void TestPushBack(int numIterations) {
       std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
   std::cout << "push_back performance: "
             << "inserting " << numIterations << " elems needs " << duration<< " us" 
-	    << std::endl;
+	     << std::endl;
 }
 
 // 测试emplace_back的性能
@@ -41,7 +41,7 @@ void TestEmplaceBack(int numIterations) {
       std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
   std::cout << "emplace_back performance:"
             << "inserting " << numIterations << " elems needs " << duration<< " us" 
-	    << std::endl;
+	     << std::endl;
 }
 
 int main() {
