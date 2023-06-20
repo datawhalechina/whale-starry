@@ -4,13 +4,17 @@
 
 void TestPushAndEmplaceTime(std::list<int>& ll) {
   auto start = std::chrono::steady_clock::now();
-  ll.push_back(1234567);
+  for (int i = 0; i < 100000; ++i) {
+    ll.push_back(rand());
+  }
   auto end = std::chrono::steady_clock::now();
   std::cout << "Test the push time: "
             << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
             << " ns" << std::endl;
   start = std::chrono::steady_clock::now();
-  ll.emplace_back(1234567);
+  for (int i = 0; i < 100000; ++i) {
+    ll.push_back(rand());
+  }
   end = std::chrono::steady_clock::now();
   std::cout << "Test the emplace time: "
             << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
