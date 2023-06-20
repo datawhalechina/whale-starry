@@ -4,6 +4,11 @@
 #include <iostream>
 #include <list>
 
+#define STOCK_SERVER_HOST "yunhq.sse.com.cn"
+#define STOCK_SERVER_PORT 32041
+#define STOCK_FIELDS "time,price,volume,avg_price,amount,highest,lowest"
+#define HTTP_STATUS_OK 200
+
 struct StockData {
   int64_t time;
   double open;

@@ -5,10 +5,6 @@
 #include "httplib.h"
 #include "simdjson.h"
 
-#define STOCK_SERVER_HOST "yunhq.sse.com.cn"
-#define STOCK_SERVER_PORT 32041
-#define STOCK_FIELDS "time,price,volume,avg_price,amount,highest,lowest"
-
 // 使用股票代码初始化
 Stock::Stock(const std::string& code) { this->code = code; };
 
@@ -21,7 +17,7 @@ std::string Stock::GetData() {
   auto res = cli.Get(GetStockServerEndpoint(this->code));
 
   // 如果请求成功，打印结果
-  if (res && res->status == 200) {
+  if (res && res->status == HTTP_STATUS_OK) {
     return res->body;
   } else {
     std::cout << "error code: " << res->status << std::endl;
