@@ -1,5 +1,5 @@
 ## Task1 的学习笔记
-# std::List默认构造器std::allocator<T>
+### std::List默认构造器std::allocator<T>
 std::allocator提供了一种类型感知的内存分配方法，它分配的内存是原始的、未构造的，当一个allocator对象分配内存时，它会根据给定的对象类型来确定恰当的内存大小和对齐位置。
 ```c++
 std::allocator<T> a;
@@ -17,8 +17,8 @@ a.construct(p, args) // p指向一块原始内存，args传递给T的构造函�
 
 a.destroy(p) // 对保存对象进行析构
 ```
-# 部分接口说明
-## splice
+### 部分接口说明
+1. splice
 ```c++
 /**
  * 把list2中的内容剪切（不是复制）并从list1的position位置开始插入，意
@@ -37,7 +37,7 @@ list1.splice (iterator position, list2, iterator i)
 */
 list1.splice (iterator position, list2, iterator first, iterator last)
 ```
-## push_front & push_back & insert
+2. push_front & push_back & insert
 所有关于插入的实现最终都指向了`_M_hook`函数，以`push_front`为例，函数调用关系如下：
 >- void push_front( T&& value ); // (C++11 起)
 >    - void _M_insert(begin(), std::move(value))
@@ -56,8 +56,7 @@ void _List_node_base:: _M_hook(_List_node_base* const __position) _GLIBCXX_USE_N
     __position->_M_prev = this;
 }
 ```
-
-# 总结
+### 总结
 * list使用动态存储，可以对任意位置快速插入和删除，但是遍历的速度比数组慢，占用空间比数组大。
 * list的迭代器不会因为插入和删除操作而失效。
 * 若想访问中间部分元素，可以使用`std::advance(it , n)`将迭代器it向后移动n个元素位置，n可以为负数。
