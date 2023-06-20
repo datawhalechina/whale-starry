@@ -6,7 +6,7 @@ int main() {
   my_list1.push_back(10);
   my_list1.push_back(20);
   MyList my_list2(my_list1);
-  
+
   std::cout << "constructor 1:  " << std::endl;
   // 容器取值
   for (auto iter = my_list1.begin(); iter != my_list1.end(); ++iter) {

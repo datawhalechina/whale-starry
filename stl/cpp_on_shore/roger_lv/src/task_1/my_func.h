@@ -13,7 +13,7 @@ void TestPushAndEmplaceTime(std::list<int>& ll) {
             << " ns" << std::endl;
   start = std::chrono::steady_clock::now();
   for (int i = 0; i < 100000; ++i) {
-    ll.push_back(rand());
+    ll.emplace_back(rand());
   }
   end = std::chrono::steady_clock::now();
   std::cout << "Test the emplace time: "
