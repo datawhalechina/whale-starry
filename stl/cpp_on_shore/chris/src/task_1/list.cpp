@@ -81,16 +81,14 @@ int main() {
     integer_1.push_back(i);  // 8509ms 1658.95ms on My Mac
   }
   t_end1 = clock();
-  std::cout << double(t_end1 - t_begin1) / CLOCKS_PER_SEC * 1000 << "ms"
-            << std::endl;
+  std::cout << double(t_end1 - t_begin1) / CLOCKS_PER_SEC * 1000 << "ms" << std::endl;
 
   t_begin2 = clock();
   for (int i = 0; i < 10000000; i++) {
     integer_1.emplace_back(i);  // 8509ms  1658.95ms on My Mac
   }
   t_end2 = clock();
-  std::cout << double(t_end1 - t_begin1) / CLOCKS_PER_SEC * 1000 << "ms"
-            << std::endl;
+  std::cout << double(t_end1 - t_begin1) / CLOCKS_PER_SEC * 1000 << "ms" << std::endl;
 
   /*use the timer define by ourselves to compare*/
   std::list<int> test_timer;

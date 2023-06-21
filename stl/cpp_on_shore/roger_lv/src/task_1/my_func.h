@@ -29,7 +29,7 @@ class MyList {
  public:
   MyList(std::list<int> x) { my_list = x; }
 
-  //希望能实现直接通过[]索引取值
+  // 希望能实现直接通过[]索引取值
   auto operator[](int pos) {
     int temp = 0;
     for (auto l : this->my_list) {
@@ -38,7 +38,7 @@ class MyList {
     }
   }
 
-  //希望能重载<<输出流，直接能通过cout打印list的值
+  // 希望能重载<<输出流，直接能通过cout打印list的值
   friend std::ostream& operator<<(std::ostream& os, const MyList& m_list) {
     for (auto it : m_list.my_list) {
       os << it << " ";
