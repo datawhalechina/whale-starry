@@ -4,8 +4,25 @@
   ![img](https://rogerlv51.blob.core.windows.net/images/stl_component.png)
   ![img](https://rogerlv51.blob.core.windows.net/images/stl_basic.png)
 
+- **关于STL中Allocator的一些说明**
+
+  通常一个对象的完整生命周期应该是operator::new分配内存空间->调用构造函数->调用析构函数->delete</br>
+  而Allocator实际上就是提供一个泛化的内存分配接口，把上述4个功能统一分配到一个类中，方便管理</br>
+  一般我们是不用手动采用`vetor<int, allocator<int>> v`这种方式的，而是直接`vector<int> v`，系统会默认使用分配器</br>
+
+  **在GCC中底层实际上是基于一个叫`new_allocator`的类实现的**
+
+  ```C++
+    // 底层主要是下面4个函数，分别表示new，delete，构造，析构
+    pointer allocate(size_type __n, const void* = static_cast<const void*>(0))
+    void deallocate(pointer __p, size_type)
+    void construct(_Up* __p, _Args&&... __args)
+    void destroy(_Up* __p)
+  ```
+
 
 - **关于list在gcc中的基础介绍：**
+
     A standard container with linear time access to elements, and fixed time insertion/deletion at any point in the sequence.
 
     list是protected继承于_List_base的，它们都有两个模板类型分别是_Tp(Type of element)、_Alloc(Allocator type)，实现上均为模板泛型编程
