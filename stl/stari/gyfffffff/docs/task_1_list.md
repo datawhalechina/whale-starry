@@ -1,25 +1,237 @@
-# list
+# list 源码学习
 
-源码：https://github.com/gcc-mirror/gcc/blob/releases/gcc-4.9/libstdc++-v3/include/bits/stl_list.h#L81
+## 0. 说明
 
-参考侯捷老师的课程、插图来源：https://www.bilibili.com/video/BV1wh4y1o7e9/?p=14&spm_id_from=333.1007.top_right_bar_window_history.content.click&vd_source=0d00fb4c5464c5c00d00e5815bfaf112
+源码：[gcc4.9](https://github.com/gcc-mirror/gcc/blob/releases/gcc-4.9/libstdc++-v3/include/bits/stl_list.h#L81)
 
-UML绘制：https://online.visual-paradigm.com/cn/diagrams/features/uml-tool/
+参考侯捷老师的课程、插图来源：[课程视频](https://www.bilibili.com/video/BV1wh4y1o7e9/?p=14&spm_id_from=333.1007.top_right_bar_window_history.content.click&vd_source=0d00fb4c5464c5c00d00e5815bfaf112)
 
+UML绘制：[visual paradigm](https://online.visual-paradigm.com/cn/diagrams/features/uml-tool/)
 
-[toc]
+## 1. 源码结构
 
-### 源码结构
+![](.\images\uml.png)
 
-<img src="./images/1_1.png" alt="list (1)" style="zoom: 67%;" />
-
-**链表节点**     `_List_node`, 继承自`_List_node_base`.
+**链表节点**    `_List_node`, 继承自`_List_node_base`。
 
 **链表**            `list`,  继承自`_List_base`
 
 **迭代器 **       `_List_iterator` 结构体
 
-### 迭代器的设计
+## 2. 链表设计
+
+list 是一个双向环状链表，头尾之间有一个占位节点。
+
+#### 2.1 list class 声明
+
+```C++
+  template<typename _Tp, typename _Alloc = std::allocator<_Tp> > // _Tp: 链表节点数据类型；Alloc:内存分配的分配器类型， 默认std::allocator<_Tp>
+    class list : protected _List_base<_Tp, _Alloc>
+    {
+    };
+```
+
+list 继承_List_base， 这个类里定义了一些更加基础的函数，在list中将会用到，如list类在开头所写：
+
+```C++
+typedef _List_base<_Tp, _Alloc>			_Base;    
+// ...
+using _Base::_M_impl;
+using _Base::_M_put_node;
+using _Base::_M_get_node;
+using _Base::_M_get_Node_allocator;
+```
+
+接下来，按照list中实现的函数顺序，依次学习每个成员函数。
+
+#### 2.2 list 成员函数
+
+首先是三个私有成员变量，分别提供了编译器为C++11前后两个版本的实现：
+
+**_M_create_node**  创建一个节点；
+
+**_S_distance**   		计算两个迭代器之间的元素数量；
+
+**_M_node_count**    计算容器中存储的元素数量。
+
+【构造函数1】 没有任何元素的list
+
+```C++
+      explicit
+      list(const allocator_type& __a) _GLIBCXX_NOEXCEPT
+      : _Base(_Node_alloc_type(__a)) { }
+```
+
+这里的构造使用了C++11的委托构造函数，委托list的基类的构造函数。[参考](https://blog.csdn.net/K346K346/article/details/81703862)
+
+【构造函数2】创建有n个默认元素的list
+
+```C++
+      explicit
+      list(size_type __n, const allocator_type& __a = allocator_type())
+      : _Base(_Node_alloc_type(__a))
+      { _M_default_initialize(__n); }
+```
+
+【构造函数3】创建有n个指定元素的list
+
+```C++
+      list(size_type __n, const value_type& __value,
+	   const allocator_type& __a = allocator_type())
+      : _Base(_Node_alloc_type(__a))
+      { _M_fill_initialize(__n, __value); }
+```
+
+【构造函数4】通过复制创建list
+
+```C++
+      list(const list& __x)
+      : _Base(_Node_alloc_traits::
+	      _S_select_on_copy(__x._M_get_Node_allocator()))
+      { _M_initialize_dispatch(__x.begin(), __x.end(), __false_type()); }
+```
+
+【构造函数5】暂没看懂
+
+【构造函数6】暂没看懂
+
+【构造函数7】从一个范围内构造list
+
+```C++
+      template<typename _InputIterator,
+	       typename = std::_RequireInputIter<_InputIterator>>
+	list(_InputIterator __first, _InputIterator __last,
+	     const allocator_type& __a = allocator_type())
+	: _Base(_Node_alloc_type(__a))
+	{ _M_initialize_dispatch(__first, __last, __false_type()); }
+```
+
+经测试，发现范围使用的是前闭后开区间。
+
+【操作符`=`重载】复制list
+
+```C++
+      list&
+      operator=(const list& __x);
+```
+
+【操作符`=`重载】将初始化列表赋值给list
+
+```C++
+      list&
+      operator=(initializer_list<value_type> __l)
+      {
+	this->assign(__l.begin(), __l.end());
+	return *this;
+      }
+```
+
+初始化列表是`{}`包裹的，用逗号分割的数据结构。
+
+【**assign**】根据参数不同，可以分配n个val；可以指定赋成从一个迭代器到下一个迭代器的内容；可以用初始化列表分配。会改变list元素数量。
+
+```C++
+    void
+      assign(size_type __n, const value_type& __val)
+      { _M_fill_assign(__n, __val); }
+      
+    template<typename _InputIterator,
+	       typename = std::_RequireInputIter<_InputIterator>>
+	void
+	assign(_InputIterator __first, _InputIterator __last)
+	{ _M_assign_dispatch(__first, __last, __false_type()); }
+
+    void
+          assign(initializer_list<value_type> __l)
+          { this->_M_assign_dispatch(__l.begin(), __l.end(), __false_type()); }
+```
+
+【**get_allocator**】获取分配器对象内存地址（？
+
+```C++
+      allocator_type
+      get_allocator() const _GLIBCXX_NOEXCEPT
+      { return allocator_type(_Base::_M_get_Node_allocator()); }
+```
+
+【**begin**】
+
+```C++
+      iterator
+      begin() _GLIBCXX_NOEXCEPT
+      { return iterator(this->_M_impl._M_node._M_next); }
+```
+
+【**end**】
+
+```C++
+      end() _GLIBCXX_NOEXCEPT
+      { return iterator(&this->_M_impl._M_node); }
+```
+
+从上面代码推断，STL list是一个环状链表且_M_node是环状链表的空白节点。
+
+【**empty**】
+
+```C++
+      _GLIBCXX_NODISCARD bool
+      empty() const _GLIBCXX_NOEXCEPT
+      { return this->_M_impl._M_node._M_next == &this->_M_impl._M_node; }
+```
+
+如果空白节点的下一个是自己，说明list为空。
+
+【**size**】元素个数
+
+```C++
+      size_type
+      size() const _GLIBCXX_NOEXCEPT
+      { return _M_node_count(); }
+```
+
+返回头结点（空白节点）的一个成员变量，里面记录了元素个数。
+
+【**front&back**】返回第一个/最后一个节点内的数据的引用。
+
+【**push_front&emplace_front**】在最前面加一个元素
+
+```C++
+      void
+      push_front(const value_type& __x)
+      { this->_M_insert(begin(), __x); }
+
+      void
+      push_front(value_type&& __x)
+      { this->_M_insert(begin(), std::move(__x)); }
+
+      void
+      emplace_front(_Args&&... __args)
+      {
+        this->_M_insert(begin(), std::forward<_Args>(__args)...);
+```
+
+两者实现了同样的功能,区别在于emplace_front不会改变变量属性，而使用`std::move`的函数效率更高。
+
+【**emplace&insert**】
+
+```C++
+    template<typename... _Args>
+	iterator
+	emplace(const_iterator __position, _Args&&... __args);
+
+	iterator
+      insert(const_iterator __position, const value_type& __x);
+```
+
+区别在于使用emplace使用了变参模板和完美转发，当list中元素是类类型时，emplace可以不产生临时变量而构造一个对象并插入指定位置。
+
+【**merge、sort**】
+
+暂时没找到在哪实现的。
+
+
+
+### 3. 迭代器的设计
 
 几乎所有容器都有自己的iterator。
 
@@ -29,7 +241,7 @@ UML绘制：https://online.visual-paradigm.com/cn/diagrams/features/uml-tool/
 
 以`++`为例：
 
-<img src="./images/1_2.png" alt="image-20230619153438202" style="zoom:80%;" />
+![](.\images\iterator visualize.png)
 
 
 
@@ -71,7 +283,7 @@ UML绘制：https://online.visual-paradigm.com/cn/diagrams/features/uml-tool/
 
 - 前加加的返回值是引用，而后加加的返回值不是引用，是为了统一C++中`++`的用法：
 
-  ![image-20230619155534286](./images/1_3.png)
+  ![](.\images\++using in cpp.png)
 
 对迭代器取`*`是想取出里面的data，而不是一个节点。所以对\*也要重载
 
@@ -98,7 +310,11 @@ _Tp*       _M_valptr()       { return _M_storage._M_ptr(); }
 
 
 
-### 节点设计
+### 4. 节点设计
+
+链表节点  `_List_node`, 继承自`_List_node_base`。 前者存放数据，后者存放前后指针和list中需要用到的方法。
+
+其中，_List_node 会根据编译器支持的C++标准版本使用不同的方式来存储节点数据：
 
 ```c++
   /// An actual node in the %list.
@@ -118,16 +334,22 @@ struct _List_node: public __detail::_List_node_base  // derived from _List_node_
 #endif
 };
 ```
+_List_node_base 代码：
+
+```C++
+struct _List_node_base
+    {
+      _List_node_base* _M_next;
+      _List_node_base* _M_prev;
+
+      ... // 后面要用的方法
+    };
+
+```
 
 
 
-### 链表设计
-
-unfinished...
-
-
-
-### 收获&复习
+### 6. 收获&复习
 
 1. uml 图。https://www.bilibili.com/video/BV1P741127u7/?vd_source=0d00fb4c5464c5c00d00e5815bfaf112
 
@@ -177,17 +399,19 @@ unfinished...
    >   ```
 
 8. STL的容器，都遵循前闭后开区间。STL的容器都有begin()和end()。begin()指向容器首元素，而end()指向容器最后一个元素的下一个元素。
-9. C++ 类的大小。https://www.cnblogs.com/ZY-Dream/p/10016731.html
+9. C++ 类的大小。[](https://www.cnblogs.com/ZY-Dream/p/10016731.html)
+10. `explicit`关键字。
+11. 初始化列表，C++11委托构造函数[参考](https://blog.csdn.net/K346K346/article/details/81703862)。
+12. C++左值右值。[参考](https://nettee.github.io/posts/2018/Understanding-lvalues-and-rvalues-in-C-and-C/)
+13. C++ std::move 。
+14. C++ 完美转发。[参考](https://zhuanlan.zhihu.com/p/469607144)
 
 
-### 验证&测试（unfinished）
+### 7. 验证&测试（unfinished）
 
-1. 如果用sizeof取一个链表大小，结果应该是？https://github.com/gyfffffff/whale-starry/blob/main/stl/stari/gyfffffff/src/task_1/test1_1.cpp
-
-2. 可以将成员变量的声明放在最后，即先使用后声明。https://github.com/gyfffffff/whale-starry/blob/main/stl/stari/gyfffffff/src/task_1/test1_2.cpp
-3. iterator 的_M_node元素大小是8B。
-4. 验证list 是双向环状链表。
+1. 如果用sizeof取一个链表大小，结果应该是？[test1_1](https://github.com/gyfffffff/whale-starry/blob/main/stl/stari/gyfffffff/src/task_1/test1_1.cpp)
+2. 可以将成员变量的声明放在最后，即先使用后声明。[test1_2](https://github.com/gyfffffff/whale-starry/blob/main/stl/stari/gyfffffff/src/task_1/test1_2.cpp)
 
 ### 感受
 
-我觉得在一天之内学完所有源码是不现实的，对我来说至少。但是意义不在于全部理解这些源码，而是在于以后面对源码不会再有畏难心理，而且即使只是读一小段代码就已经收获良多了。
+ 极大缓解了对源码的恐惧；即使读不完收获也很多。
