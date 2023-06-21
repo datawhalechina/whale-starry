@@ -40,7 +40,7 @@ int main() {
   print(list6);
 
   // maxsize
-  std::cout<<list1.max_size()<<std::endl;
+  std::cout << list1.max_size() << std::endl;
 
   // push_front&emplace_front
   list1.push_front(99);
