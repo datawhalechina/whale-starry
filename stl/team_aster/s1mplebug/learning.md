@@ -337,36 +337,36 @@ bool empty() const {
 
 ```c++
 template<typename _Tp, typename _Alloc = std::allocator<_Tp>>
-  class list : protected _List_base<_Tp, _Alloc> {
-    ...
-    typedef _List_base<_Tp, _Alloc> _Base;
-    ...
+class list : protected _List_base<_Tp, _Alloc> {
+  ...
+  typedef _List_base<_Tp, _Alloc> _Base;
+  ...
 
-  public:
-    ...
-    typedef _List_iterator<_Tp> iterator;
-    ...
+public:
+  ...
+  typedef _List_iterator<_Tp> iterator;
+  ...
 
-  protected:
-    ...
-    using _Base::_M_impl;
-    ...
+protected:
+  ...
+  using _Base::_M_impl;
+  ...
 
-    // 返回末尾空指针的next 作为当前的首节点 因此是个环形链表
-    iterator begin() {
-        return iterator(this->_M_impl._M_node._M_next);
-    }
-    iterator end() {
-        return iterator(&this->_M_impl._M_node);
-    }
-    // next指向自己的时候 说明只有一个空哨节点 所以为空
-    bool empty() const {
-      return this->_M_impl._M_node._M_next == & this->_M_impl._M_node;
-    }
-    size_type size() const {
-        return std::distance(begin(), end());
-    }
-  };
+  // 返回末尾空指针的next 作为当前的首节点 因此是个环形链表
+  iterator begin() {
+      return iterator(this->_M_impl._M_node._M_next);
+  }
+  iterator end() {
+      return iterator(&this->_M_impl._M_node);
+  }
+  // next指向自己的时候 说明只有一个空哨节点 所以为空
+  bool empty() const {
+    return this->_M_impl._M_node._M_next == & this->_M_impl._M_node;
+  }
+  size_type size() const {
+      return std::distance(begin(), end());
+  }
+};
 ```
 
 观察`begin()`和`end()`，分别返回的是一个迭代器对象，即`_List_iterator<_Tp>`模板类对象，其内部包含了哨兵节点，`begin()`指向了这个`list`哨兵节点的`_M_next`位置，`list`的`_M_impl`对象为哨兵节点，其`_M_next`代表首位置。`end()`返回的就是指向哨兵节点的迭代器，在日常使用时，`end()`代表的本身就是链表末尾节点的下一个位置，这也符合应用的逻辑。
