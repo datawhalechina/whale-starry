@@ -6,6 +6,8 @@
 #include <thread>
 #include <vector>
 
+#include "LRU.h"
+
 // define a timer by myself to check the efficiency between list.push_back
 //&emplace_back
 struct Timer {
@@ -32,6 +34,23 @@ void cal_push_back(std::list<int> int_list) {
   for (int i = 0; i < 10000000; i++) {
     int_list.push_back(i);
   }
+}
+
+void lru_test() {
+  lru<int,          // key type
+      std::string,  // value type
+      std::list<Node<int, std::string>>::iterator>
+      a(5);  // iterator type
+  a.setVal(1, "aaa");
+  a.setVal(2, "bbbb");
+  a.setVal(3, "ccccc");
+  a.setVal(4, "dddddd");
+  a.setVal(5, "eeeeeee");
+  std::cout << a.getVal(1) << std::endl;
+  a.setVal(6, "ffffffff");
+  std::cout << a.getVal(2) << std::endl;
+
+  std::cout << a.getVal(6) << std::endl;
 }
 
 int main() {
@@ -62,14 +81,16 @@ int main() {
     integer_1.push_back(i);  // 8509ms 1658.95ms on My Mac
   }
   t_end1 = clock();
-  std::cout << double(t_end1 - t_begin1) / CLOCKS_PER_SEC * 1000 << "ms" << std::endl;
+  std::cout << double(t_end1 - t_begin1) / CLOCKS_PER_SEC * 1000 << "ms"
+            << std::endl;
 
   t_begin2 = clock();
   for (int i = 0; i < 10000000; i++) {
     integer_1.emplace_back(i);  // 8509ms  1658.95ms on My Mac
   }
   t_end2 = clock();
-  std::cout << double(t_end1 - t_begin1) / CLOCKS_PER_SEC * 1000 << "ms" << std::endl;
+  std::cout << double(t_end1 - t_begin1) / CLOCKS_PER_SEC * 1000 << "ms"
+            << std::endl;
 
   /*use the timer define by ourselves to compare*/
   std::list<int> test_timer;
@@ -85,4 +106,5 @@ int main() {
   std::cout << "This two ways for adding elements is kind of different.";
   std::cout << " And list.emplace_back method is kind of faster." << std::endl;
   // std::cout << "Happy List Ending!" << std::endl;
+  lru_test();
 }
