@@ -3,7 +3,6 @@
 
 #include "ivarnd_list.h"
 
-
 int main() {
   ivarnd::list<int> m_list1;
 
