@@ -1,43 +1,48 @@
-namespace __tiny_stl {
+#ifndef TINYSTL_ITERATOR_H_
+#define TINYSTL_ITERATOR_H_
+
+namespace tiny_stl {
 
 // iterator type: GCC 4.9 实现
 // input iterators.
-struct input_iterator_tag {};
+struct InputIteratorTag {};
 
 // output iterators.
-struct output_iterator_tag {};
+struct OutputIteratorTag {};
 
 // Forward iterators support a superset of input iterator operations.
-struct forward_iterator_tag : public input_iterator_tag {};
+struct ForwardIteratorTag : public InputIteratorTag {};
 
 // Bidirectional iterators support a superset of forward iterator
 // operations.
-struct bidirectional_iterator_tag : public forward_iterator_tag {};
+struct BidirectionalIteratorTag : public ForwardIteratorTag {};
 
 // Random-access iterators support a superset of bidirectional
 // iterator operations.
-struct random_access_iterator_tag : public bidirectional_iterator_tag {};
+struct RandAccessIteratorTag : public BidirectionalIteratorTag {};
 
 // iterator traits
 // 1. iterator is class
 template <typename I>
-struct iterator_traits {
-  // ⭐ need typename before I::value_type to identify this is a type
-  using value_type = typename I::value_type;
+struct IteratorTraits {
+  // ⭐ need typename before I::ValueType to identify this is a type
+  using ValueType = typename I::ValueType;
 };
 
-// // 2. iterator is pointer
+// // 2. iterator is Pointer
 template <typename T>
-struct iterator_traits<T*> {
-  using value_type = T;
+struct IteratorTraits<T*> {
+  using ValueType = T;
 };
 
-// // 2. iterator is const pointer
+// // 2. iterator is const Pointer
 // // value_type主要用于声明变量，而声明一个常量(无法赋值)没什么用处
 // // 因此返回的是T，而非const T
 template <typename T>
-struct iterator_traits<const T*> {
-  using value_type = T;
+struct IteratorTraits<const T*> {
+  using ValueType = T;
 };
 
-}  // namespace __tiny_stl
+}  // namespace tiny_stl
+
+#endif

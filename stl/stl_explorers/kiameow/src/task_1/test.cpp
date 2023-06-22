@@ -1,13 +1,13 @@
-#include "myList.h"
+#include "my_list.h"
 
 #include <iostream>
 
 int main() {
-  myList_node<int>* header = new myList_node<int>;
+  MyListNode<int>* header = new MyListNode<int>;
   header->pos = 0;
-  myList_node<int>* p = header;
+  MyListNode<int>* p = header;
   for (int i = 0; i < 10; ++i) {
-    myList_node<int>* tmp = new myList_node<int>;
+    MyListNode<int>* tmp = new MyListNode<int>;
     int value;
     std::cin >> value;
     tmp->value = value;
@@ -16,8 +16,8 @@ int main() {
     p = tmp;
   }
 
-  myList_iterator<int> it(header->next);
-  myList_iterator<int> it_end(p);
+  MyListIterator<int> it(header->next);
+  MyListIterator<int> it_end(p);
   for (; it < it_end; it += 2) {
     std::cout << *it << " ";
   }

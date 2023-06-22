@@ -2,10 +2,8 @@
 
 #include <iostream>
 
-using namespace __tiny_stl;
-
 template <typename T>
-void print_list(List<T>& l) {
+void print_list(tiny_stl::List<T>& l) {
   if (l.empty()) {
     std::cout << "list is empty!" << std::endl;
     return;
@@ -21,7 +19,7 @@ void print_list(List<T>& l) {
 
 int main() {
   // 创建含整数的 list
-  List<int> l;
+  tiny_stl::List<int> l;
 
   // 添加整数到 list 开头
   for (int i = 4; i >= 0; --i) {

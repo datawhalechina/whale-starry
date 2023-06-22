@@ -1,10 +1,13 @@
-#include <cstdint>
+#ifndef TINYSTL_LIST_HPP_
+#define TINYSTL_LIST_HPP_
 
 #include "tiny_alloc.h"
 #include "tiny_iterator.h"
 
-namespace __tiny_stl {
-using size_type = uint64_t;
+#include <cstdint>
+
+namespace tiny_stl {
+using SizeType = uint64_t;
 
 struct ListNodeBase {
   ListNodeBase* next_ = nullptr;
@@ -26,43 +29,43 @@ struct ListNodeBase {
   }
 };
 
-template <typename ValueType>
+template <typename DataType>
 struct ListNode : public ListNodeBase {
-  ValueType data_;  // user's data
+  DataType data_;  // user's data
 };
 
 // ⭐ ListBase中的Alloc是不确定的，但是List中会指定默认参数
 // 且List中的Alloc就是为了父类而定义的
 // ❗其中Alloc是一个模板类型参数
-template <typename ValueType, typename Alloc>
+template <typename DataType, typename Alloc>
 class ListBase {
  protected:
   // TODO: consider alloctor
-  using node_alloc_t = typename Alloc::rebind<ListNode<ValueType>>::other;
+  using NodeAllocType = typename Alloc::Rebind<ListNode<DataType>>::other;
 
-  struct ListImpl : public node_alloc_t {
+  struct ListImpl : public NodeAllocType {
     ListNodeBase node_;
 
     // construct function
     ListImpl() : node_() {}
-    ListImpl(const node_alloc_t& a) noexcept : node_alloc_t(a), node_() {}
+    ListImpl(const NodeAllocType& a) noexcept : NodeAllocType(a), node_() {}
   };
 
   ListImpl impl_;
 
-  using node_t = ListNode<ValueType>;
-  node_t* get_node() {
+  using NodeType = ListNode<DataType>;
+  NodeType* get_node() {
     // 调用impl_的父类的方法，申请空间 <==> malloc调用
-    return impl_.node_alloc_t::allocate();
+    return impl_.NodeAllocType::allocate();
   }
 
   // 调用impl_的父类的方法，申请空间 <==> free调用
-  void put_node(node_t* p) { impl_.node_alloc_t::deallocate(p); }
+  void put_node(NodeType* p) { impl_.NodeAllocType::deallocate(p); }
 
  public:
   // 普通构造函数
   ListBase() : impl_() { init(); };
-  ListBase(const node_alloc_t& a) noexcept : impl_(a) { init(); }
+  ListBase(const NodeAllocType& a) noexcept : impl_(a) { init(); }
 
   // TODO: move constructor, need to implement functions to get allocte
   // to simple the code, we do not implement that
@@ -79,51 +82,51 @@ class ListBase {
 };
 
 // list iterator
-template <typename ValueType>
+template <typename DataType>
 struct ListIterator {
-  using self_t = ListIterator<ValueType>;
-  using node_t = ListNode<ValueType>;
+  using SelfType = ListIterator<DataType>;
+  using NodeType = ListNode<DataType>;
 
   // Iterator trait
-  using difference_type = uint64_t;
-  using iterator_category = bidirectional_iterator_tag;
-  using value_type = ValueType;
-  using pointer = ValueType*;
-  using reference = ValueType&;
+  using DifferenceType = uint64_t;
+  using IteratorCategory = BidirectionalIteratorTag;
+  using ValueType = DataType;
+  using Pointer = DataType*;
+  using Reference = DataType&;
 
   // construct function
   ListIterator() noexcept : node_() {}
   explicit ListIterator(ListNodeBase* n) noexcept : node_(n) {}
 
-  reference operator*() const noexcept { return static_cast<node_t*>(node_)->data_; }
+  Reference operator*() const noexcept { return static_cast<NodeType*>(node_)->data_; }
 
-  pointer operator->() const noexcept { return &(static_cast<node_t*>(node_)->data_); }
+  Pointer operator->() const noexcept { return &(static_cast<NodeType*>(node_)->data_); }
 
-  self_t& operator++() noexcept {
+  SelfType& operator++() noexcept {
     node_ = node_->next_;
     return *this;
   }
 
-  self_t operator++(int) noexcept {
-    self_t temp = *this;
+  SelfType operator++(int) noexcept {
+    SelfType temp = *this;
     node_ = node_->next_;
     return temp;
   }
 
-  self_t& operator--() noexcept {
+  SelfType& operator--() noexcept {
     node_ = node_->prev_;
     return *this;
   }
 
-  self_t operator--(int) noexcept {
-    self_t temp = *this;
+  SelfType operator--(int) noexcept {
+    SelfType temp = *this;
     node_ = node_->prev_;
     return temp;
   }
 
-  bool operator==(const self_t& rhs) const noexcept { return node_ == rhs.node_; }
+  bool operator==(const SelfType& rhs) const noexcept { return node_ == rhs.node_; }
 
-  bool operator!=(const self_t& rhs) const noexcept { return node_ != rhs.node_; }
+  bool operator!=(const SelfType& rhs) const noexcept { return node_ != rhs.node_; }
 
   ListNodeBase* node_;
 };
@@ -131,19 +134,19 @@ struct ListIterator {
 /**
  * List 的简单实现
  */
-template <typename ValueType, typename Alloc = allocator<ValueType>>
-class List : protected ListBase<ValueType, Alloc> {
-  using base_t = ListBase<ValueType, Alloc>;
-  using node_t = ListNode<ValueType>;
-  using reference = node_t&;
+template <typename DataType, typename Alloc = Allocator<DataType>>
+class List : protected ListBase<DataType, Alloc> {
+  using BaseType = ListBase<DataType, Alloc>;
+  using NodeType = ListNode<DataType>;
+  using Reference = NodeType&;
 
-  using allocator_type = Alloc;
-  using base_t::node_alloc_t;
+  using AllocatorType = Alloc;
+  using BaseType::NodeAllocType;
 
-  // ❗ 目前ValueType只适用于 C++ 内置基本数据类型(无需调用析构)
-  node_t* create_node(const ValueType& x) {
+  // ❗ 目前DataType只适用于 C++ 内置基本数据类型(无需调用析构)
+  NodeType* create_node(const DataType& x) {
     // 调用父类的方法申请一块内存
-    node_t* p = this->get_node();
+    NodeType* p = this->get_node();
 
     // 构造对象
     // TODO: 因该调用ValuetType的构造函数 -> 调用中间层：全局的construct()函数<待实现>
@@ -155,13 +158,13 @@ class List : protected ListBase<ValueType, Alloc> {
   }
 
   // TODO: 因该调用ValuetType的析构函数 -> 调用中间层：全局的deconstruct()函数<待实现>
-  void destory_node(node_t* p) noexcept { base_t::put_node(p); }
+  void destory_node(NodeType* p) noexcept { BaseType::put_node(p); }
 
  public:
   /* TODO: construct/copy/destroy
    */
-  List() : base_t() {}
-  explicit List(const allocator_type& a) : base_t(node_alloc_t(a)) {}
+  List() : BaseType() {}
+  explicit List(const AllocatorType& a) : BaseType(NodeAllocType(a)) {}
 
   // List copy constructor.
   // List(const List& rhs){this->impl_}
@@ -176,14 +179,14 @@ class List : protected ListBase<ValueType, Alloc> {
 
   /* iterators function
    */
-  using iterator = ListIterator<ValueType>;
-  iterator begin() noexcept {
+  using Iterator = ListIterator<DataType>;
+  Iterator begin() noexcept {
     // 获取dummy node的next,并构造成迭代器
-    return iterator(this->impl_.node_.next_);
+    return Iterator(this->impl_.node_.next_);
   }
-  iterator end() noexcept {
+  Iterator end() noexcept {
     // 获取dummy node,并构造成迭代器
-    return iterator(&(this->impl_.node_));
+    return Iterator(&(this->impl_.node_));
   }
 
   // TODO: reverse_iterator
@@ -191,9 +194,9 @@ class List : protected ListBase<ValueType, Alloc> {
   /* capacity
    */
   bool empty() const noexcept { return this->impl_.node_.next_ == &this->impl_.node_; }
-  size_type size() const noexcept {
-    size_type distance = 0;
-    iterator iter = begin();
+  SizeType size() const noexcept {
+    SizeType distance = 0;
+    Iterator iter = begin();
     while (iter != end()) {
       ++distance;
       ++iter;
@@ -204,9 +207,9 @@ class List : protected ListBase<ValueType, Alloc> {
 
   /* element access
    */
-  reference front() noexcept { return *begin(); }
-  reference back() noexcept {
-    iterator temp = end();
+  Reference front() noexcept { return *begin(); }
+  Reference back() noexcept {
+    Iterator temp = end();
     --temp;
     return *temp;
   }
@@ -214,24 +217,24 @@ class List : protected ListBase<ValueType, Alloc> {
   /* TODO: modifiers
    */
 
-  void push_front(const ValueType& x) { this->insert(begin(), x); }
+  void push_front(const DataType& x) { this->insert(begin(), x); }
 
   void pop_front() noexcept { this->erase(begin()); }
 
-  void push_back(const ValueType& x) { this->insert(end(), x); }
+  void push_back(const DataType& x) { this->insert(end(), x); }
 
-  void pop_back() noexcept { this->erase(iterator(this->impl_.node_.prev_)); }
+  void pop_back() noexcept { this->erase(Iterator(this->impl_.node_.prev_)); }
 
-  void insert(iterator position, const ValueType& x) {
-    node_t* temp = create_node(x);
+  void insert(Iterator position, const DataType& x) {
+    NodeType* temp = create_node(x);
     temp->hook(position.node_);
   }
 
-  iterator erase(iterator position) noexcept {
+  Iterator erase(Iterator position) noexcept {
     // 返回删除节点的下一个节点
-    iterator ret = iterator(position.node_->next_);
+    Iterator ret = Iterator(position.node_->next_);
 
-    node_t* temp = static_cast<node_t*>(position.node_);
+    NodeType* temp = static_cast<NodeType*>(position.node_);
     // 从链表断开
     temp->unhook();
     // 释放空间
@@ -243,14 +246,14 @@ class List : protected ListBase<ValueType, Alloc> {
   void swap(List& other) noexcept;
 
   void clear() noexcept {
-    base_t::clear();
-    base_t::init();
+    BaseType::clear();
+    BaseType::init();
   }
 
   /* TODO: list operations
    */
-  void splice(iterator pos, List& other);
-  void splice(iterator pos, List& other, iterator first, iterator last);
+  void splice(Iterator pos, List& other);
+  void splice(Iterator pos, List& other, Iterator first, Iterator last);
 
   void reverse() noexcept;
   void unique();
@@ -258,4 +261,6 @@ class List : protected ListBase<ValueType, Alloc> {
   template <typename Compare>
   void sort(Compare cmp);
 };
-}  // namespace __tiny_stl
+}  // namespace tiny_stl
+
+#endif

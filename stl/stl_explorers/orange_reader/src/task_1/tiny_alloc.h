@@ -1,23 +1,28 @@
+#ifndef TINYSTL_ALLOC_H_
+#define TINYSTL_ALLOC_H_
+
 #include <cstdlib>
 
-namespace __tiny_stl {
+namespace tiny_stl {
 // TODO:default memory allocator
 template <typename T>
-struct allocator {
-  using value_type = T;
-  using pointer = T*;
+struct Allocator {
+  using ValueType = T;
+  using Pointer = T*;
 
   // 修改allocator的模板参数类型T -> U
   // [std::allocator](https://en.cppreference.com/w/cpp/memory/allocator)
   template <typename U>
-  struct rebind {
-    typedef allocator<U> other;
+  struct Rebind {
+    typedef Allocator<U> other;
   };
 
-  pointer allocate() { return (pointer)malloc(sizeof(T)); }
+  Pointer allocate() { return (Pointer)malloc(sizeof(T)); }
 
-  void deallocate(pointer m) { free(m); }
+  void deallocate(Pointer m) { free(m); }
 };
 
 // TODO: other allocator, like pool_allocator...
-}  // namespace __tiny_stl
+}  // namespace tiny_stl
+
+#endif
