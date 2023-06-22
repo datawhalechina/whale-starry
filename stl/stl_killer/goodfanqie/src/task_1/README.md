@@ -1,0 +1,1 @@
+I read the source code of [list](./stl_list.h),the notes is [here](../../doc/task_1/list_learn.md).
