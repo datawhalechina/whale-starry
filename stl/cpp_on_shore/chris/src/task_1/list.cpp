@@ -6,7 +6,7 @@
 #include <thread>
 #include <vector>
 
-#include "LRU.h"
+#include "my_lru.h"
 
 // define a timer by myself to check the efficiency between list.push_back
 //&emplace_back
