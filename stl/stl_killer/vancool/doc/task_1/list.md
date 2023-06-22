@@ -15,7 +15,7 @@ class list : protected _List_base<_Tp, _Alloc>`
 
 嗯关系非常复杂： 
 
-![Untitled](List%20d5eb667438694baa958d19ddf522c9d8/Untitled.png)
+![Untitled](list_pics//class_rels.png)
 
 我认为需要在意的是 list 继承_List_base, _List_base 里面有_List_impl, 实际上我们平时写的listnode就在里面，很怪的地方是_List_node数据层居然是继承指针层，我不理解的。 
 
@@ -45,7 +45,7 @@ protected:
 
 1. shape of data structure 
 
-![Untitled](List%20d5eb667438694baa958d19ddf522c9d8/Untitled%201.png)
+![Untitled](list_pics/struct.png)
 
 实际上list有存这个dummy empty node,  因此才会有判断list empty()和 begin() & end()
 
