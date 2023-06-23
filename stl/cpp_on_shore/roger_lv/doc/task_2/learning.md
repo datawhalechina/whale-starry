@@ -47,7 +47,7 @@
 
     - **reference back():** Returns a read/write reference to the data at the last element of the vector.  内部实现直接返回*(end()-1)
 
-    - **_Tp* data():** Returns a pointer such that [data(), data() + size()) is a valid range.  For a non-empty vector, data() == &front(). 返回vector的首地址
+    - **_Tp\* data():** Returns a pointer such that [data(), data() + size()) is a valid range.  For a non-empty vector, data() == &front(). 返回vector的首地址
 
     - **void push_back(const value_type& __x):** Add data to the end of the vector. 典型的栈操作，时间复杂度O(1). 如果加入新元素后大小超过了原先分配的capacity则要先分配额外空间。底层调用_M_realloc_insert函数。实际上自C++11之后push_back也是调用emplace_back函数的
         ```C++
