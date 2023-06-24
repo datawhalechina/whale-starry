@@ -1,4 +1,4 @@
-## Day 1 小试牛刀
+## Day 1 小试牛刀-list
 
 本次任务对应的代码为 [gcc/libstdc++-v3/include/bits/stl_list.h at releases/gcc-9 · gcc-mirror/gcc · GitHub](https://github.com/gcc-mirror/gcc/blob/releases/gcc-9/libstdc%2B%2B-v3/include/bits/stl_list.h)
 
@@ -114,3 +114,6 @@ self operator++(int)
 ![image-20230620003638458](../images/operator_example.png)
 
 箭头的用意，就是一个对于一个`指针指向的地方的值` 进行操作，而星号的操作对象是一个结构体而不是指针。
+
+## 
+
