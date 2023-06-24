@@ -7,39 +7,32 @@
 和`list`的基类管理指针，子类管理数据的方式不同，`vector`的数据是在连续的空间上，`vector_base` 存储的是指针`point`，通过指针访问数据的内容（数据就是指针类型）。
 
 ```c++
-template<typename _Tp, typename _Alloc>
-struct _Vector_base
-  {
-    typedef typename __gnu_cxx::__alloc_traits<_Alloc>::template rebind<_Tp>::other _Tp_alloc_type;
-    typedef typename __gnu_cxx::__alloc_traits<_Tp_alloc_type>::pointer
-        pointer;
+template <typename _Tp, typename _Alloc>
+struct _Vector_base {
+  typedef typename __gnu_cxx::__alloc_traits<_Alloc>::template rebind<_Tp>::other
+      _Tp_alloc_type;
+  typedef typename __gnu_cxx::__alloc_traits<_Tp_alloc_type>::pointer pointer;
 
-    struct _Vector_impl_data
-    {
-      pointer _M_start;//头指针
-      pointer _M_finish;//尾指针
-      pointer _M_end_of_storage;//已分配空间的最后一个指针
+  struct _Vector_impl_data {
+    pointer _M_start;           // 头指针
+    pointer _M_finish;          // 尾指针
+    pointer _M_end_of_storage;  // 已分配空间的最后一个指针
 
-      _Vector_impl_data() _GLIBCXX_NOEXCEPT
-          : _M_start(),
-            _M_finish(),
-            _M_end_of_storage()
-      {
-      }
-      _Vector_impl_data(_Vector_impl_data &&__x) noexcept
-          : _M_start(__x._M_start), _M_finish(__x._M_finish),
-            _M_end_of_storage(__x._M_end_of_storage)
-      {
-        __x._M_start = __x._M_finish = __x._M_end_of_storage = pointer();
-      }
+    _Vector_impl_data() _GLIBCXX_NOEXCEPT : _M_start(),
+                                            _M_finish(),
+                                            _M_end_of_storage() {}
+    _Vector_impl_data(_Vector_impl_data&& __x) noexcept
+        : _M_start(__x._M_start),
+          _M_finish(__x._M_finish),
+          _M_end_of_storage(__x._M_end_of_storage) {
+      __x._M_start = __x._M_finish = __x._M_end_of_storage = pointer();
     }
-    
-    struct _Vector_impl
-        : public _Tp_alloc_type,
-          public _Vector_impl_data
-    {
-              /*...用来管理_Vector_impl_data的增删改操作，总之就是内存管理....*/
-    }
+  }
+
+  struct _Vector_impl : public _Tp_alloc_type,
+                        public _Vector_impl_data {
+    /*...用来管理_Vector_impl_data的增删改操作，总之就是内存管理....*/
+  }
 }
 
 ```
@@ -156,7 +149,7 @@ public:
 
 
 
-# vector
+## vector
 
 ```c
 template <typename _Tp, typename _Alloc = std::allocator<_Tp>>
@@ -207,7 +200,7 @@ vector(const vector &__x)
 
 至于`__uninitialized_copy_a`和`_Destroy`具体实现是什么，先不管，从结果上看可以知道它们的做用是拷贝和释放内存。
 
-## 删除
+### 删除
 
 `pop_back`
 
@@ -269,7 +262,7 @@ void
 }
 ```
 
-## 增加
+### 增加
 
 增加元素是重头戏，这里涉及到`vector`的动态内存管理。
 
@@ -357,7 +350,7 @@ void vector<_Tp, _Alloc>::
   pointer __new_finish(__new_start);
   __try
   {
-      //在__new_start + __elems_before上创建x
+      //在pos = __new_start + __elems_before上创建x
     _Alloc_traits::construct(this->_M_impl,
                              __new_start + __elems_before, __x);
       //将 __new_finish 指针设置为空指针,避免在后面的代码中使用未初始化的指针。
@@ -369,6 +362,7 @@ void vector<_Tp, _Alloc>::
     ++__new_finish;
 	//将 [__position.base, __old_finish) 之间的元素移动到新的内存区域[__new_finish,..)中，并返回一个指向新内存中最后一个元素的下一个位置的指针
     __new_finish = std::__uninitialized_move_if_noexcept_a(__position.base(), __old_finish, __new_finish, _M_get_Tp_allocator());
+      
   }
   __catch(...)//出错了，释放创建的新内存
   {
@@ -410,7 +404,7 @@ void vector<_Tp, _Alloc>::
 size_type
 _M_check_len(size_type __n, const char* __s) const
 {
-    if (max_size() - size() < __n)
+    if (max_size() - size() < __n) //判断当前剩余空间是否能添加n个
         __throw_length_error(__N(__s));
 
     const size_type __len = size() + std::max(size(), __n); //如果n小于当前size，内存加倍，否则内存增长n。
@@ -418,3 +412,283 @@ _M_check_len(size_type __n, const char* __s) const
 }
 ```
 
+
+
+如果插入的是一串，`insert`的一个重载版本会调用下面这个函数：
+
+```c++
+template <typename _Tp, typename _Alloc>
+template <typename _ForwardIterator>
+void
+vector<_Tp, _Alloc>::
+_M_range_insert(iterator __position, _ForwardIterator __first,
+                _ForwardIterator __last, std::forward_iterator_tag)
+{
+    if (__first != __last) //先判断插入的是否为空
+    {
+        const size_type __n = std::distance(__first, __last); //计算要插入的串的大小
+        if (size_type(this->_M_impl._M_end_of_storage - this->_M_impl._M_finish) >= __n)//当前空间足够
+        {
+            const size_type __elems_after = end() - __position;
+            pointer __old_finish(this->_M_impl._M_finish);
+            //情况一，[pos,end) 的个数大于插入的数量
+            if (__elems_after > __n)
+            {
+                //[finish-n, finish) --> [finish, ...)
+                std::__uninitialized_move_a(this->_M_impl._M_finish - __n,
+                                            this->_M_impl._M_finish,
+                                            this->_M_impl._M_finish,
+                                            _M_get_Tp_allocator());
+                this->_M_impl._M_finish += __n;
+                //这里我不理解为什么还要移动一次
+                _GLIBCXX_MOVE_BACKWARD3(__position.base(),  __old_finish - __n, __old_finish);
+                
+                std::copy(__first, __last, __position);
+            }
+            //情况二，[pos,end) 的个数小于等于插入的数量
+            else
+            {
+                _ForwardIterator __mid = __first;
+                std::advance(__mid, __elems_after);// 将mid移动__elems_after到finish的位置
+                
+                //[mid, last) --> [finish,...)
+                std::__uninitialized_copy_a(__mid, __last,
+                                            this->_M_impl._M_finish,
+                                            _M_get_Tp_allocator());
+                this->_M_impl._M_finish += __n - __elems_after;
+                
+                //[pos, old_finish) --> [new_finish,...)
+                std::__uninitialized_move_a(__position.base(),
+                                            __old_finish,
+                                            this->_M_impl._M_finish,
+                                            _M_get_Tp_allocator());
+                this->_M_impl._M_finish += __elems_after;
+                
+                std::copy(__first, __mid, __position);
+            }
+        }
+        //情况三，空间不够，这里和_M_realloc_insert很像
+        else
+        {
+            const size_type __len =
+                _M_check_len(__n, "vector::_M_range_insert");
+            pointer __new_start(this->_M_allocate(__len));
+            pointer __new_finish(__new_start);
+            
+            __try
+            {
+                // [start, pos) --> [new_start, ...)
+                __new_finish = std::__uninitialized_move_if_noexcept_a(this->_M_impl._M_start, __position.base(), __new_start, _M_get_Tp_allocator());
+                
+                // [first, last) --> [new_finish, ...)
+                __new_finish = std::__uninitialized_copy_a(__first, __last, __new_finish, _M_get_Tp_allocator());
+                
+                // [pos, finish) --> [new_finish)
+                __new_finish = std::__uninitialized_move_if_noexcept_a(__position.base(), this->_M_impl._M_finish,  __new_finish, _M_get_Tp_allocator());
+            }
+            __catch(...)
+            {
+                std::_Destroy(__new_start, __new_finish,
+                              _M_get_Tp_allocator());
+                _M_deallocate(__new_start, __len);
+                __throw_exception_again;
+            }
+            std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+                          _M_get_Tp_allocator());
+            _GLIBCXX_ASAN_ANNOTATE_REINIT;
+            _M_deallocate(this->_M_impl._M_start,
+                          this->_M_impl._M_end_of_storage - this->_M_impl._M_start);
+            this->_M_impl._M_start = __new_start;
+            this->_M_impl._M_finish = __new_finish;
+            this->_M_impl._M_end_of_storage = __new_start + __len;
+        }
+    }
+}
+```
+
+
+
+## 应用
+
+我们来验证下**动态扩容机制**：
+
+```c++
+int main() {
+  std::vector<int> vec;
+
+  // 输出vector的初始容量和大小
+  std::cout << "Initial capacity: " << vec.capacity() << std::endl;
+  std::cout << "Initial size: " << vec.size() << std::endl;
+
+  // 添加1000个整数到vector中，并在容量发生变化时输出相关信息
+  int mlen = 0;
+  for (int i = 0; i < 1000; i++) {
+    vec.push_back(i);
+    if (vec.capacity() != mlen) {
+      std::cout << "size: " << vec.size() << " capacity: " << vec.capacity() << std::endl;
+      mlen = vec.capacity();
+    }
+  }
+
+  // 手动控制内存分配和释放
+  vec.reserve(2000);  // 预分配2000个元素的空间
+  std::cout << "Capacity after reserving 2000 elements: " << vec.capacity() << std::endl;
+
+  vec.shrink_to_fit();  // 释放多余的内存
+  std::cout << "Capacity after shrinking to fit: " << vec.capacity() << std::endl;
+
+  return 0;
+}
+```
+
+<img src="./image-1.png" alt="image-20230624130838244" style="zoom:80%;" />
+
+可以看到在内存足够的情况下，预分配空间大小确实是倍增的，通过源码分析我们知道，如果一次性添加的元素大于剩余空间并且比原`vector`还大，会直接分配`n`的空间，刚好够插入多个元素。
+
+**效率对比**
+
+`list`使用的是双向迭代器，而`vector`使用的是随机访问迭代器，很明显在增删上`list`会比`vector`快，因为`vector`几乎每次都要进行多个元素的拷贝，同样的道理`list`在改查方面一定比`vector`慢，毕竟`vector`在空间上连续。写个程序探讨下效率究竟差多少。
+
+```c++
+// 定义一个计时器类
+class Timer {
+ public:
+  Timer() : m_start(std::chrono::high_resolution_clock::now()) {}
+  void reset() { m_start = std::chrono::high_resolution_clock::now(); }
+  double elapsed() const {
+    return std::chrono::duration_cast<std::chrono::duration<double>>(
+               std::chrono::high_resolution_clock::now() - m_start)
+        .count();
+  }
+
+ private:
+  std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
+};
+
+void test_vector(const int N, const int M) {
+  std::vector<int> v;  // 定义一个vector
+
+  // 生成随机数
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<> dis(1, 100);
+
+  // 插入元素
+  double insert_time = 0;
+  {
+    Timer t;
+    for (int i = 0; i < N; ++i) {
+      v.push_back(dis(gen));
+    }
+    insert_time += t.elapsed();
+  }
+  std::cout << "time to insert " << N
+            << " elements into vector: " << insert_time << " s\n";
+
+  // 随机访问
+  double access_time = 0;
+  for (int i = 0; i < M; ++i) {
+    long long sum = 0;
+    Timer t;
+    for (int i = 0; i < N; ++i) {
+      sum += v[i];
+    }
+    access_time += t.elapsed();
+  }
+  std::cout << "time to access " << N << " elements in vector: " << access_time
+            << " s\n";
+
+  // 删除元素
+  double erase_middle_time = 0;
+  for (int i = 0; i < 10000; ++i) {
+    auto it = v.begin();
+    std::advance(it, N / 2);//查找"中间"那个，虽然不是真的中间，但不影响测试结果
+    Timer t;
+    v.erase(it);
+    erase_middle_time += t.elapsed();
+  }
+  std::cout << "time to erase an element from the middle of vector: "
+            << erase_middle_time << " s\n";
+
+  //排序
+  {
+    Timer t;
+    std::sort(v.begin(), v.end());
+    double sort_time = t.elapsed();
+    std::cout << "time to sort of vector: " << sort_time << " s\n";
+  }
+}
+
+void test_list(const int N, const int M) {
+  std::list<int> l;  // 定义一个list
+
+  // 生成随机数
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<> dis(1, 100);
+
+  // 插入元素
+  double insert_time = 0;
+  {
+    Timer t;
+    for (int i = 0; i < N; ++i) {
+      l.push_back(dis(gen));
+    }
+    insert_time += t.elapsed();
+  }
+  std::cout << "time to insert " << N << " elements into list: " << insert_time
+            << " s\n";
+
+  // 随机访问
+  double access_time = 0;
+  for (int i = 0; i < M; ++i) {
+    long long sum = 0;
+    Timer t;
+    for (auto it = l.begin(); it != l.end(); ++it) {
+      sum += *it;
+    }
+    access_time += t.elapsed();
+  }
+  std::cout << "time to access " << N << " elements in list: " << access_time
+            << " s\n";
+
+  // 删除元素
+  double erase_middle_time = 0;
+  for (int i = 0; i < 10000; ++i) {
+    auto it = l.begin();
+    std::advance(it, N / 2);
+    Timer t;
+    l.erase(it);
+    erase_middle_time += t.elapsed();
+  }
+  std::cout << "time to erase an element from the middle of list: "
+            << erase_middle_time << " s\n";
+
+  //排序
+  {
+    Timer t;
+    l.sort();
+    double sort_time = t.elapsed();
+    std::cout << "time to sort of list: " << sort_time << " s\n";
+  }
+}
+void Compare() {
+  const int N = 1000000;  // 数据量大小
+  const int M = 10;       // 每个操作执行的次数
+  std::cout << "Testing list:\n";
+  test_list(N, M);
+
+  std::cout << "\nTesting vector:\n";
+  test_vector(N, M);
+}
+```
+
+![image-20230624153727093](./image-2.png)
+
+经过多次测试，`list`在增删上的时间很优秀，尤其是删除（其实我觉得增上面，`list`理应也甩开`vector`一段距离，可能是创建节点这块消耗时间比较多），而`list`查找方面就逊色了，如果删除的时候把定位中间元素的时间也算上的话，会发现`list`比`vector`慢10倍
+
+![image-20230624154401699](./image-3.png)
+
+如果增删操作的频率**远高于**查找的话，我们使用`list`，否则的话使用`vector`。而且通过源码分析我们得出，`vector`占用的空间会比`list`少，`list`每一个数据至少都要前后两个指针维护，而`vector`不需要这么多冗余的数据。
+
+综上，除非对`list`有特殊的需求，否则的话使用`vector`是更好的选择。
