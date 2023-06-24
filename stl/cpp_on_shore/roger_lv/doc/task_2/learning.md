@@ -39,7 +39,7 @@
 
     - **bool empty():** Returns true if the vector is empty.
 
-    - **void reserve(size_type __n):** Attempt to preallocate enough memory for specified number of elements. 具体实现在vector.tcc中，比如reserve(10)则capacity就是10
+    - **void reserve(size_type __n):** Attempt to preallocate enough memory for specified number of elements. 具体实现在vector.tcc中，比如reserve(10)则capacity就是10. 这样的好处是在于我们提前知道处理的数据数量级大概是多少，就可以提前开辟，节约后续处理事件
 
     - **reference operator[](size_type __n):** Subscript access to the data contained in the vector. Read/write reference to data. 很显然我们平时可以通过[]修改值是因为这里返回的是引用，根据源码剖析，显然这里的查找时间复杂度为O(1)。如果索引超出数组大小则返回默认值0
 
