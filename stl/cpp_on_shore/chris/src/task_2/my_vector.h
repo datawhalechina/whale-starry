@@ -1,9 +1,8 @@
 #include <cstring>
 #include <iostream>
 
-template <typename T>
-class My_Vector {
- public:
+template <typename T> class My_Vector {
+public:
   // 无参构造的初始化
   My_Vector() : p(NULL), capacity(0), size(0) {}
   // 有参构造的初始化方式
@@ -22,7 +21,7 @@ class My_Vector {
     }
   }
   // 拷贝构造函数
-  My_Vector(const My_Vector& v) {
+  My_Vector(const My_Vector &v) {
     this->capacity = v.capacity;
     this->size = v.size;
     this->p = new T[this->capacity];
@@ -41,11 +40,11 @@ class My_Vector {
     if (this->p == NULL) {
       this->capacity = 20;
       this->size = 0;
-      T* p = new T[capacity];
+      T *p = new T[capacity];
     }
     if (this->size == this->capacity) {
       // 如果满了，每次容量拓展到2倍
-      T* new_p = new T[this->capacity * 2];
+      T *new_p = new T[this->capacity * 2];
       memcpy(new_p, p, this->size * sizeof(T));
       this->capacity *= 2;
       delete[] p;
@@ -67,7 +66,7 @@ class My_Vector {
     if (pos >= 0 && pos <= this->size) {
       if (this->size == this->capacity) {
         // 如果满了，每次容量拓展到2倍
-        T* new_p = new T[this->capacity * 2];
+        T *new_p = new T[this->capacity * 2];
         memcpy(new_p, p, this->size * sizeof(T));
         this->capacity *= 2;
         delete[] p;
@@ -84,13 +83,13 @@ class My_Vector {
   void clear() { this->size = 0; }
 
   // 重载[]运算符，可以用[]修改函数
-  T& operator[](int index) {
+  T &operator[](int index) {
     if (index > 0 && index < this->size) {
       return this->p[index];
     }
   }
   // 重载赋值=
-  void operator=(const My_Vector& v) {
+  void operator=(const My_Vector &v) {
     if (this->p != NULL) {
       delete[] this->p;
       this->capacity = 0;
@@ -104,8 +103,8 @@ class My_Vector {
   }
 
   // 来看看内部的capacity和size的不同之处
- public:
-  T* p;
+public:
+  T *p;
   int capacity;
   int size;
 };
