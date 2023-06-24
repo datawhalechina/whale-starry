@@ -8,7 +8,7 @@ using std::endl;
 
 int main() {
   std::list<int> mylist(3, 5);
-
+  mylist.sort();
   cout << "mylist:" << endl;
   for (int x : mylist) {
     cout << x << " ";
