@@ -10,6 +10,48 @@ class vector {
   typedef const T* const_iterator;
 
   vector() : _start(nullptr), _finish(nullptr), _end_of_storagre(nullptr) {}
+  vector(size_t n, const T& val = T())
+      : _start(nullptr), _finish(nullptr), _end_of_storagre(nullptr) {
+    reverse(n);
+    for (size_t i = 0; i < n; ++i) {
+      push_back(val);
+    }
+  }
+  vector(int n, const T& val = T())
+      : _start(nullptr), _finish(nullptr), _end_of_storagre(nullptr) {
+    reverse(n);
+    for (int i = 0; i < n; ++i) {
+      push_back(val);
+    }
+  }
+  template <class InputIterator>
+  vector(InputIterator first, InputIterator last)
+      : _start(nullptr), _finish(nullptr), _end_of_storagre(nullptr) {
+    while (first != last) {
+      push_back(*first);
+      ++first;
+    }
+  }
+
+  /*
+  // 不够传统
+  vector(const vector<T>& v) {
+    reverse(v.capacity());
+    for (auto e : v) {
+      push_back(e);
+    }
+  }
+  */
+
+  vector(const vector<T>& v) {
+    _start = new T[v.capacity()];
+    // memcpy(_start, v._start, sizeof(T) * v.size());
+    for (size_t i = 0; i < v.size(); ++i) {
+      _start[i] = v._start[i];
+    }
+    _finish = _start + v.size();
+    _end_of_storagre = _start + v.capacity();
+  }
 
   void push_back(const T& x) {
     if (_finish == _end_of_storagre) {
@@ -19,6 +61,7 @@ class vector {
     *_finish = x;
     ++_finish;
   }
+
   void pop_back() {
     assert(!empty());
     --_finish;
@@ -28,7 +71,10 @@ class vector {
       size_t sz = size();
       T* tmp = new T[n];
       if (_start) {
-        memcpy(tmp, _start, size() * sizeof(T));
+        // memcpy(tmp, _start, size() * sizeof(T));
+        for (size_t i = 0; i < sz; ++i) {
+          tmp[i] = _start[i];
+        }
         delete[] _start;
       }
       _start = tmp;
@@ -52,8 +98,43 @@ class vector {
     }
   }
 
+  void swap(vector<T>& v) {
+    std::swap(_start, v._start);
+    std::swap(_finish, v._finish);
+    std::swap(_end_of_storagre, v._end_of_storagre);
+  }
+
+  iterator insert(iterator pos, const T& val) {
+    assert(pos >= _start && pos <= _finish);
+    if (_finish == _end_of_storagre) {
+      size_t len = pos - _start;
+      reverse(capacity() == 0 ? 4 : capacity() * 2);
+      // 扩容后更新pos，解决pos失效问题
+      pos = _start + len;
+    }
+    iterator end = _finish - 1;
+    while (end >= pos) {
+      *(end + 1) = *end;
+      --end;
+    }
+    *pos = val;
+    ++_finish;
+    return pos;
+  }
+
+  iterator erase(iterator pos) {
+    assert(pos >= _start && pos < _finish);
+    iterator start = pos + 1;
+    while (start != _finish) {
+      *(start - 1) = *start;
+      ++start;
+    }
+    --_finish;
+    return pos;
+  }
+
   iterator begin() { return _start; }
-  
+
   iterator end() { return _finish; }
 
   bool empty() { return _start == _finish; }
@@ -68,15 +149,26 @@ class vector {
 
   const_iterator begin() const { return _start; }
   const_iterator end() const { return _finish; }
+
   const T& operator[](size_t pos) const {
     assert(pos < size());
     return _start[pos];
   }
 
+  vector<T>& operator=(vector<T> v) {
+    swap(v);
+    return *this;
+  }
+
+  ~vector() {
+    delete[] _start;
+    _start = _finish = _end_of_storagre = nullptr;
+  }
+
  private:
-  iterator _start;
-  iterator _finish;
-  iterator _end_of_storagre;
+  iterator _start = nullptr;
+  iterator _finish = nullptr;
+  iterator _end_of_storagre = nullptr;
 };
 
 }  // namespace ivarnd
