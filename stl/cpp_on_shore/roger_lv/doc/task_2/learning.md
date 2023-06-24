@@ -33,6 +33,8 @@
 
     - **void resize(size_type __new_size):** Resizes the vector to the specified number of elements. If the number is smaller than the vector's current size the vector is truncated, otherwise default constructed elements are appended. 此外还可以指定多出的值填什么
 
+    - **void shrink_to_fit():** A non-binding request to reduce capacity() to size(). 把capacity和size对齐，即缩小capacity到size. 底层调用的是_S_do_it这个函数
+
     - **size_type capacity():** Returns the total number of elements that the vector can hold before needing to allocate more memory. 即容器初始化时赋予的大小
 
     - **bool empty():** Returns true if the vector is empty.
