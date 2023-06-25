@@ -4,25 +4,29 @@
 
 class Subject;
 
-class Observer {
+class Observer : public std::enable_shared_from_this<Observer> {
  public:
-  Observer(Subject* subject);
-  void removeObserver();
+  Observer();
+  ~Observer();
+
   void notify();
+  std::shared_ptr<Observer> shared_observer();
 
  protected:
-  Subject& subject_;
-
   // 演示用
   //  参考代码：https://refactoringguru.cn/design-patterns/observer/cpp/example
+
   int number_;
   static int static_number_;
 };
 
 class Subject {
  public:
-  void registerObserver(Observer* o);
-  void removeObserver(Observer* o);
+  Subject();
+  ~Subject();
+
+  void registerObserver(std::shared_ptr<Observer> o);
+  void unregisterObserver(std::shared_ptr<Observer> o);
   void notifyObservers();
 
   //  演示用
@@ -30,7 +34,7 @@ class Subject {
   int getState();
 
  protected:
-  std::vector<Observer*> observers_;
+  std::vector<std::shared_ptr<Observer>> observers_;
   int state_ = 0;
 };
 #endif
