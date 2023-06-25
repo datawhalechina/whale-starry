@@ -37,8 +37,8 @@ void TestVector(const int N, const int M) {
     }
     insert_time += t.elapsed();
   }
-  std::cout << "time to insert " << N
-            << " elements into vector: " << insert_time << " s\n";
+  std::cout << "time to insert " << N << " elements into vector: " << insert_time
+            << " s\n";
 
   // 随机访问
   double access_time = 0;
@@ -50,8 +50,7 @@ void TestVector(const int N, const int M) {
     }
     access_time += t.elapsed();
   }
-  std::cout << "time to access " << N << " elements in vector: " << access_time
-            << " s\n";
+  std::cout << "time to access " << N << " elements in vector: " << access_time << " s\n";
 
   // 删除元素
   double erase_middle_time = 0;
@@ -63,8 +62,8 @@ void TestVector(const int N, const int M) {
     v.erase(it);
     erase_middle_time += t.elapsed();
   }
-  std::cout << "time to erase an element from the middle of vector: "
-            << erase_middle_time << " s\n";
+  std::cout << "time to erase an element from the middle of vector: " << erase_middle_time
+            << " s\n";
 
   // 排序
   {
@@ -92,8 +91,7 @@ void TestList(const int N, const int M) {
     }
     insert_time += t.elapsed();
   }
-  std::cout << "time to insert " << N << " elements into list: " << insert_time
-            << " s\n";
+  std::cout << "time to insert " << N << " elements into list: " << insert_time << " s\n";
 
   // 随机访问
   double access_time = 0;
@@ -105,8 +103,7 @@ void TestList(const int N, const int M) {
     }
     access_time += t.elapsed();
   }
-  std::cout << "time to access " << N << " elements in list: " << access_time
-            << " s\n";
+  std::cout << "time to access " << N << " elements in list: " << access_time << " s\n";
 
   // 删除元素
   double erase_middle_time = 0;
@@ -117,8 +114,8 @@ void TestList(const int N, const int M) {
     l.erase(it);
     erase_middle_time += t.elapsed();
   }
-  std::cout << "time to erase an element from the middle of list: "
-            << erase_middle_time << " s\n";
+  std::cout << "time to erase an element from the middle of list: " << erase_middle_time
+            << " s\n";
 
   // 排序
   {
@@ -150,20 +147,17 @@ void Expansion() {
   for (int i = 0; i < 1000; i++) {
     vec.push_back(i);
     if (vec.capacity() != mlen) {
-      std::cout << "size: " << vec.size() << " capacity: " << vec.capacity()
-                << std::endl;
+      std::cout << "size: " << vec.size() << " capacity: " << vec.capacity() << std::endl;
       mlen = vec.capacity();
     }
   }
 
   // 手动控制内存分配和释放
   vec.reserve(2000);  // 预分配2000个元素的空间
-  std::cout << "Capacity after reserving 2000 elements: " << vec.capacity()
-            << std::endl;
+  std::cout << "Capacity after reserving 2000 elements: " << vec.capacity() << std::endl;
 
   vec.shrink_to_fit();  // 释放多余的内存
-  std::cout << "Capacity after shrinking to fit: " << vec.capacity()
-            << std::endl;
+  std::cout << "Capacity after shrinking to fit: " << vec.capacity() << std::endl;
 }
 
 int main() {
