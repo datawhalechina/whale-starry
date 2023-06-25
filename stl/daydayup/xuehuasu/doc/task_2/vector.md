@@ -541,7 +541,7 @@ int main() {
 }
 ```
 
-<img src="./image-1.png" alt="image-20230624130838244" style="zoom:80%;" />
+![test_dynamic_expansion.png](./img/test_dynamic_expansion.png)
 
 可以看到在内存足够的情况下，预分配空间大小确实是倍增的，通过源码分析我们知道，如果一次性添加的元素大于剩余空间并且比原`vector`还大，会直接分配`n`的空间，刚好够插入多个元素。
 
@@ -683,11 +683,11 @@ void Compare() {
 }
 ```
 
-![image-20230624153727093](./image-2.png)
+![test_efficiency_comparison1.png](./img/test_efficiency_comparison1.png)
 
 经过多次测试，`list`在增删上的时间很优秀，尤其是删除（其实我觉得增上面，`list`理应也甩开`vector`一段距离，可能是创建节点这块消耗时间比较多），而`list`查找方面就逊色了，如果删除的时候把定位中间元素的时间也算上的话，会发现`list`比`vector`慢10倍
 
-![image-20230624154401699](./image-3.png)
+![test_efficiency_comparison2.png](./img/test_efficiency_comparison2.png)
 
 如果增删操作的频率**远高于**查找的话，我们使用`list`，否则的话使用`vector`。而且通过源码分析我们得出，`vector`占用的空间会比`list`少，`list`每一个数据至少都要前后两个指针维护，而`vector`不需要这么多冗余的数据。
 
