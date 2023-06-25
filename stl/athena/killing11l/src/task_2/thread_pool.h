@@ -26,7 +26,7 @@ class ThreadPool {
       std::unique_lock<std::mutex> lock(mtx_);
       tasks_.emplace([task] { (*task)(); });
     }
-    cond_.notify_all();
+    cond_.notify_one();
     return res;
   }
   ~ThreadPool();
