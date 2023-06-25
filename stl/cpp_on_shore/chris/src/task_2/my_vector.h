@@ -1,12 +1,12 @@
 #include <cstring>
 #include <iostream>
 
-template <typename T> class My_Vector {
+template <typename T> class MyVector {
 public:
   // 无参构造的初始化
-  My_Vector() : p(NULL), capacity(0), size(0) {}
+  MyVector() : p(NULL), capacity(0), size(0) {}
   // 有参构造的初始化方式
-  My_Vector(int size, T data) {
+  MyVector(int size, T data) {
     this->capacity = 20 + size;
     this->size = size;
     this->p = new T[capacity];
@@ -15,13 +15,13 @@ public:
     }
   }
   // 析构函数，释放掉唯一的指针
-  ~My_Vector() {
+  ~MyVector() {
     if (p != NULL) {
       delete[] p;
     }
   }
   // 拷贝构造函数
-  My_Vector(const My_Vector &v) {
+  MyVector(const MyVector &v) {
     this->capacity = v.capacity;
     this->size = v.size;
     this->p = new T[this->capacity];
@@ -89,7 +89,7 @@ public:
     }
   }
   // 重载赋值=
-  void operator=(const My_Vector &v) {
+  void operator=(const MyVector &v) {
     if (this->p != NULL) {
       delete[] this->p;
       this->capacity = 0;
@@ -110,7 +110,7 @@ public:
 };
 
 void test() {
-  My_Vector<int> v(3, 1);
+  MyVector<int> v(3, 1);
   v.print();
   std::cout << "size: " << v.size << " capacity: " << v.capacity << std::endl;
   for (int iter = 0; iter < 11; iter++) {
@@ -125,13 +125,13 @@ void test() {
   v.print();
 
   std::cout << "what" << std::endl;
-  My_Vector<int> v2(v);
+  MyVector<int> v2(v);
   v2.print();
 
-  My_Vector<int> v3 = v;
+  MyVector<int> v3 = v;
   v3.print();
 
-  My_Vector<int> v4;
+  MyVector<int> v4;
   v4 = v;
   v4.print();
 
