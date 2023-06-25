@@ -2,9 +2,16 @@
 
 #include <iostream>
 
-void Subject::registerObserver(Observer* o) { observers_.push_back(o); }
+//--------------------------------------------------------------------
+// Subject
+//--------------------------------------------------------------------
+Subject::Subject() { std::cout << "Subject created" << std::endl; }
 
-void Subject::removeObserver(Observer* o) {
+Subject::~Subject() { std::cout << "Subject destroyed" << std::endl; }
+
+void Subject::registerObserver(std::shared_ptr<Observer> o) { observers_.push_back(o); }
+
+void Subject::unregisterObserver(std::shared_ptr<Observer> o) {
   for (auto it = observers_.begin(); it != observers_.end(); ++it) {
     if (*it == o) {
       observers_.erase(it);
@@ -15,8 +22,6 @@ void Subject::removeObserver(Observer* o) {
 
 void Subject::setState(int state) {
   state_ = state;
-  // 演示用
-  // 自动调用notifyObservers
   notifyObservers();
 }
 
@@ -28,20 +33,23 @@ void Subject::notifyObservers() {
   }
 }
 
-Observer::Observer(Subject* subject) : subject_(*subject) {
+//--------------------------------------------------------------------
+// Observer
+//--------------------------------------------------------------------
+Observer::Observer() {
   Observer::static_number_++;
-  subject_.registerObserver(this);
   this->number_ = Observer::static_number_;
-
-  std::cout << "Observer " << this->number_ << " Created" << std::endl;
 }
 
-void Observer::removeObserver() {
-  subject_.removeObserver(this);
-  std::cout << "Observer " << this->number_ << " Removed" << std::endl;
+Observer::~Observer() {
+  std::cout << "Observer " << this->number_ << " destroyed" << std::endl;
+}
+
+std::shared_ptr<Observer> Observer::shared_observer() {
+  std::shared_ptr<Observer> obj = shared_from_this();
+  return obj;
 }
 
 void Observer::notify() {
   std::cout << "Observer " << this->number_ << " notified" << std::endl;
-  std::cout << "\tSubject state: " << subject_.getState() << std::endl;
 }
