@@ -7,8 +7,8 @@ int main() {
   std::shared_ptr<Observer> observer1 = std::make_shared<Observer>();
   std::shared_ptr<Observer> observer2 = std::make_shared<Observer>();
 
-  subject.get()->registerObserver(observer1);
-  subject.get()->registerObserver(observer2);
+  subject->registerObserver(observer1);
+  subject->registerObserver(observer2);
 
   subject->setState(1);
   subject->setState(2);
