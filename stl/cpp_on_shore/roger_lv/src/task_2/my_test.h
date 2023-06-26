@@ -17,7 +17,7 @@ class Person {
   std::string GetName() { return name; }
 };
 
-void TestPushAndEmplaceTime(std::vector<Person> &vc) {
+void TestPushAndEmplaceTime(std::vector<Person>& vc) {
   auto start = std::chrono::steady_clock::now();
   for (int i = 0; i < 100000; ++i) {
     vc.push_back(Person(10, "roger"));

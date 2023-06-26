@@ -90,7 +90,7 @@ class MyVector {
     }
   }
   // 重载赋值=
-  void operator=(const MyVector &v) {
+  void operator=(const MyVector& v) {
     if (this->p != NULL) {
       delete[] this->p;
       this->capacity = 0;
