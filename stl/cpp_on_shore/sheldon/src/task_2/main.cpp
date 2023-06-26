@@ -3,8 +3,8 @@
 #include <vector>
 
 // 输出列表中的所有元素
-void PrintVector(const std::vector<int> &myvector) {
-  for (const auto &element : myvector) {
+void PrintVector(const std::vector<int>& myvector) {
+  for (const auto& element : myvector) {
     std::cout << element << " ";
   }
   std::cout << std::endl;

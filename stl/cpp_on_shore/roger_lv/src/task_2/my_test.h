@@ -24,8 +24,7 @@ void TestPushAndEmplaceTime(std::vector<Person> &vc) {
   }
   auto end = std::chrono::steady_clock::now();
   std::cout << "Test the push time: "
-            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
-                   .count()
+            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
             << " ns" << std::endl;
   start = std::chrono::steady_clock::now();
   for (int i = 0; i < 100000; ++i) {
@@ -33,20 +32,18 @@ void TestPushAndEmplaceTime(std::vector<Person> &vc) {
   }
   end = std::chrono::steady_clock::now();
   std::cout << "Test the emplace time: "
-            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
-                   .count()
+            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
             << " ns" << std::endl;
 }
 
-void TestAboutAt(std::vector<Person> &vc) {
+void TestAboutAt(std::vector<Person>& vc) {
   auto start = std::chrono::steady_clock::now();
   for (int i = 0; i < 100000; ++i) {
     int temp = vc[10].GetAge();
   }
   auto end = std::chrono::steady_clock::now();
   std::cout << "Test the [] time: "
-            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
-                   .count()
+            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
             << " ns" << std::endl;
   start = std::chrono::steady_clock::now();
   for (int i = 0; i < 100000; ++i) {
@@ -54,8 +51,7 @@ void TestAboutAt(std::vector<Person> &vc) {
   }
   end = std::chrono::steady_clock::now();
   std::cout << "Test the at time: "
-            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
-                   .count()
+            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
             << " ns" << std::endl;
 }
 
@@ -63,7 +59,7 @@ void TestAboutAt(std::vector<Person> &vc) {
 template <typename T>
 class MyVector {
  private:
-  T *data;
+  T* data;
   int size;
   int capacity;
 
@@ -81,12 +77,12 @@ class MyVector {
     size = n;
     capacity = n;
   }
-  MyVector(const MyVector &v) { *this = v; }
+  MyVector(const MyVector& v) { *this = v; }
   ~MyVector() { delete[] data; }
-  void push_back(const T &x) {
+  void push_back(const T& x) {
     if (size == capacity) {
       capacity *= 2;
-      T *temp = new T[capacity];
+      T* temp = new T[capacity];
       for (int i = 0; i < size; ++i) {
         temp[i] = data[i];
       }
@@ -104,7 +100,7 @@ class MyVector {
     }
     --size;
   }
-  T &operator[](int index) noexcept {
+  T& operator[](int index) noexcept {
     if (index < 0 || index >= size) {
       return data[0];
     }
