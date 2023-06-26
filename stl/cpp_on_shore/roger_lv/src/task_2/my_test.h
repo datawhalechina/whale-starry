@@ -24,8 +24,7 @@ void TestPushAndEmplaceTime(std::vector<Person> &vc) {
   }
   auto end = std::chrono::steady_clock::now();
   std::cout << "Test the push time: "
-            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
-                   .count()
+            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
             << " ns" << std::endl;
   start = std::chrono::steady_clock::now();
   for (int i = 0; i < 100000; ++i) {
@@ -33,8 +32,7 @@ void TestPushAndEmplaceTime(std::vector<Person> &vc) {
   }
   end = std::chrono::steady_clock::now();
   std::cout << "Test the emplace time: "
-            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
-                   .count()
+            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
             << " ns" << std::endl;
 }
 
@@ -45,8 +43,7 @@ void TestAboutAt(std::vector<Person> &vc) {
   }
   auto end = std::chrono::steady_clock::now();
   std::cout << "Test the [] time: "
-            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
-                   .count()
+            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
             << " ns" << std::endl;
   start = std::chrono::steady_clock::now();
   for (int i = 0; i < 100000; ++i) {
@@ -54,8 +51,7 @@ void TestAboutAt(std::vector<Person> &vc) {
   }
   end = std::chrono::steady_clock::now();
   std::cout << "Test the at time: "
-            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
-                   .count()
+            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
             << " ns" << std::endl;
 }
 
@@ -75,7 +71,7 @@ public:
   MyVector(int n) {
     data = new T[n];
     for (int i = 0; i < n; ++i) {
-      data[i] = T();
+      data[i] = 0;
     }
     size = n;
     capacity = n;
@@ -91,6 +87,7 @@ public:
       }
       temp[++size] = x;
       data = temp;
+      delete[] temp;
     } else {
       data[++size] = x;
     }
@@ -102,14 +99,13 @@ public:
     }
     --size;
   }
-  T &operator[](int index) {
+  T &operator[](int index) noexcept{
     if (index < 0 || index >= size) {
-      std::cout << "The index is out of range!" << std::endl;
       return data[0];
     }
     return data[index];
   }
-  T &Size() { return size; }
-  T &Capacity() { return capacity; }
+  T Size() { return size; }
+  T Capacity() { return capacity; }
   void clear() { size = 0; }
 };
