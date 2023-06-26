@@ -1,8 +1,9 @@
 #include <cstring>
 #include <iostream>
 
-template <typename T> class MyVector {
-public:
+template <typename T>
+class MyVector {
+ public:
   // 无参构造的初始化
   MyVector() : p(NULL), capacity(0), size(0) {}
   // 有参构造的初始化方式
@@ -103,7 +104,7 @@ public:
   }
 
   // 来看看内部的capacity和size的不同之处
-public:
+ public:
   T *p;
   int capacity;
   int size;

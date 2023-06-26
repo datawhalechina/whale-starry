@@ -3,11 +3,11 @@
 #include <vector>
 
 class Person {
-private:
+ private:
   int age = 24;
   std::string name = "Roger";
 
-public:
+ public:
   Person(){};
   Person(int x, std::string n) {
     age = x + 14;
@@ -24,7 +24,8 @@ void TestPushAndEmplaceTime(std::vector<Person> &vc) {
   }
   auto end = std::chrono::steady_clock::now();
   std::cout << "Test the push time: "
-            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
+            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
+                   .count()
             << " ns" << std::endl;
   start = std::chrono::steady_clock::now();
   for (int i = 0; i < 100000; ++i) {
@@ -32,7 +33,8 @@ void TestPushAndEmplaceTime(std::vector<Person> &vc) {
   }
   end = std::chrono::steady_clock::now();
   std::cout << "Test the emplace time: "
-            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
+            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
+                   .count()
             << " ns" << std::endl;
 }
 
@@ -43,7 +45,8 @@ void TestAboutAt(std::vector<Person> &vc) {
   }
   auto end = std::chrono::steady_clock::now();
   std::cout << "Test the [] time: "
-            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
+            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
+                   .count()
             << " ns" << std::endl;
   start = std::chrono::steady_clock::now();
   for (int i = 0; i < 100000; ++i) {
@@ -51,18 +54,20 @@ void TestAboutAt(std::vector<Person> &vc) {
   }
   end = std::chrono::steady_clock::now();
   std::cout << "Test the at time: "
-            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
+            << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
+                   .count()
             << " ns" << std::endl;
 }
 
 // 手写一个简易版本的vector
-template <typename T> class MyVector {
-private:
+template <typename T>
+class MyVector {
+ private:
   T *data;
   int size;
   int capacity;
 
-public:
+ public:
   MyVector() {
     data = new T[10];
     size = 0;
@@ -99,7 +104,7 @@ public:
     }
     --size;
   }
-  T &operator[](int index) noexcept{
+  T &operator[](int index) noexcept {
     if (index < 0 || index >= size) {
       return data[0];
     }

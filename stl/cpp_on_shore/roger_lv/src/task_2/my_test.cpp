@@ -2,7 +2,6 @@
 
 #include <gtest/gtest.h>
 
-
 int main() {
   std::vector<Person> v;
   // 可以看到push的速度比emplace速度慢一些，但实际上在c++11以上没什么太大区别

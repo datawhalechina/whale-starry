@@ -9,7 +9,7 @@
 #include "my_vector.h"
 
 class Timer {
-public:
+ public:
   std::chrono::time_point<std::chrono::steady_clock> start, end;
   std::chrono::duration<float> last_time;
 
@@ -38,14 +38,16 @@ void test_push(std::vector<int> int_vector) {
   }
 }
 
-template <class T> void test_push_method(T int_data) {
+template <class T>
+void test_push_method(T int_data) {
   Timer timer;
   for (int i = 0; i < 10000000; i++) {
     int_data.push_back(i);
   }
 }
 
-template <class T> void test_emplace_method(T int_data) {
+template <class T>
+void test_emplace_method(T int_data) {
   Timer timer;
   for (int i = 0; i < 10000000; i++) {
     int_data.emplace_back(i);
@@ -56,14 +58,14 @@ int main() {
   std::vector<int> push_vector;
   // use copy constructor to keep the same
   std::vector<int> emplace_vector(push_vector);
-  test_push(push_vector);       // 470.52ms
-  test_emplace(emplace_vector); // 1447.66ms
+  test_push(push_vector);        // 470.52ms
+  test_emplace(emplace_vector);  // 1447.66ms
 
   std::list<int> list_push_test;
   std::list<int> list_emplace_test(list_push_test);
 
-  test_push_method(std::list<int>(list_push_test));       // use template func
-  test_emplace_method(std::list<int>(list_emplace_test)); // use template func
+  test_push_method(std::list<int>(list_push_test));        // use template func
+  test_emplace_method(std::list<int>(list_emplace_test));  // use template func
 
   std::vector<int> vector_push_test;
   std::vector<int> vector_emplace_test(vector_push_test);
