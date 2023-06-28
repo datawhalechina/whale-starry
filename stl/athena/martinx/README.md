@@ -2,4 +2,5 @@
 
 | 序号  |任务   | 开始时间   |  结束时间    |    笔记  |    代码   |
 | :--- | :---  | :----:    |   :---:    |   :---  |  :---  |
-| 1 | [小试牛刀-list](https://github.com/gcc-mirror/gcc/blob/releases/gcc-9/libstdc%2B%2B-v3/include/bits/stl_list.h)  | 2023-06-19  |  2023-06-20  | [√](doc/task_1/README.md) | [√](src/task_1/main.cpp) |
+| 1 | 小试牛刀-list | 2023-06-19  |  2023-06-20  | [√](doc/task_1/README.md) | [√](src/task_1/main.cpp) |
+| 2 | 面试必备-vector | 2023-06-24  |  2023-06-25  | [√](doc/task_2/README.md) | [√](src/task_2/main.cpp) |
