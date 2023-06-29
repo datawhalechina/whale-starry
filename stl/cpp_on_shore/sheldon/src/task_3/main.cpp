@@ -25,6 +25,6 @@ int main() {
 
   m_set.erase(5);
   m_set.print();
-  
+
   return 0;
 }
