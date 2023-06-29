@@ -10,9 +10,7 @@ class Person {
   bool operator<(const Person& other) const { return this->age < other.age; }
 
   int GetAge() { return age; }
-  void PrintInfo() {
-    std::cout << "age: " << age << " name: " << name << std::endl;
-  }
+  void PrintInfo() { std::cout << "age: " << age << " name: " << name << std::endl; }
 
  private:
   int age;
