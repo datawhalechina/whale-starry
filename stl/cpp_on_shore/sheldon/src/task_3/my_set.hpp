@@ -5,12 +5,13 @@
 #include <bits/stl_tree.h>
 #include <initializer_list>
 
-template<typename _Key, typename _Compare = std::less<_Key>,
-         typename _Alloc = std::allocator<_Key>>
+template <typename _Key, typename _Compare = std::less<_Key>,
+          typename _Alloc = std::allocator<_Key>>
 class my_set {
  private:
   std::_Rb_tree<_Key, _Key, std::_Identity<_Key>, _Compare, _Alloc> itree;
   std::_Rb_tree_iterator<_Key> iter = itree.begin();
+
  public:
   void insert(_Key x) {
     /*插入 利用_M_insert_unique的特性，不用判断是否重复*/
