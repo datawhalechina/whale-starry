@@ -1,62 +1,53 @@
 /*
  * 利用stl_tree.h实现set的自定义接口
  */
-#include <bits/stl_tree.h>
 #include <bits/concept_check.h>
+#include <bits/stl_tree.h>
 #include <initializer_list>
 
 template<typename _Key, typename _Compare = std::less<_Key>,
-  typename _Alloc = std::allocator<_Key>>
-class my_set
-{
-private:
+         typename _Alloc = std::allocator<_Key>>
+class my_set {
+ private:
   std::_Rb_tree<_Key, _Key, std::_Identity<_Key>, _Compare, _Alloc> itree;
   std::_Rb_tree_iterator<_Key> iter = itree.begin();
-public:
-  void insert(_Key x){
+ public:
+  void insert(_Key x) {
     /*插入 利用_M_insert_unique的特性，不用判断是否重复*/
     itree._M_insert_unique(x);
   }
 
-  int size(){
+  int size() {
     // _M_impl; declared protected in itree, so the below command doesn't work
     // return itree._M_impl._M_node_count;
     return itree.size();
   }
 
   // 一些自定义的接口
-  void print(){
+  void print() {
     /*打印set*/
     iter = itree.begin();
-    while(iter != itree.end()){
-        std::cout << *iter << " ";
-        iter++;
+    while (iter != itree.end()) {
+      std::cout << *iter << " ";
+      iter++;
     }
     std::cout << std::endl;
   }
 
-  bool exist(_Key x){
+  bool exist(_Key x) {
     /*返回 x 是否存在*/
-    if(itree.find(x) != itree.end()){
-        return true;
-    }else{
-        return false;
+    if (itree.find(x) != itree.end()) {
+      return true;
+    } else {
+      return false;
     }
   }
 
-  bool empty(){
-    return itree.empty();
-  }
+  bool empty() { return itree.empty(); }
 
-  _Key max(){
-    return *itree.rbegin();
-  }
+  _Key max() { return *itree.rbegin(); }
 
-  _Key min(){
-    return *itree.begin();
-  }
+  _Key min() { return *itree.begin(); }
 
-  void erase(_Key x){
-    itree.erase(x);
-  }
+  void erase(_Key x) { itree.erase(x); }
 };
