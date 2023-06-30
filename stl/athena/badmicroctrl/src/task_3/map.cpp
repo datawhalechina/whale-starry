@@ -1,5 +1,5 @@
-#include <map>
 #include <iostream>
+#include <map>
 int main() {
   std::map<int, std::string> c;
   c.insert(std::pair<int, std::string>(1, "Hello std::map"));
