@@ -1,5 +1,4 @@
-#include <assert.h>
-
+#include <cassert>
 #include <iostream>
 
 typedef enum { RED = 0, BLACK } Color;
@@ -19,15 +18,15 @@ class RbTree {
  public:
   // constructor
   RbTree() {
-    Nil = BuyNode();
-    root = Nil;
-    Nil->color = BLACK;
+    nil = ApplyNode();
+    root = nil;
+    nil->color = BLACK;
   }
   // deconstructor
   ~RbTree() {
-    Destroy(root);  // 销毁创建的非Nil节点
-    delete Nil;
-    Nil = nullptr;
+    Destroy(root);  // 销毁创建的非nil节点
+    delete nil;
+    nil = nullptr;
   }
 
   // 中序遍历
@@ -37,9 +36,9 @@ class RbTree {
   // 1. BST方式插入
   // 2. 调整平衡
   bool Insert(const Type& value) {
-    RbTreeNode<Type>* pr = Nil;  // 用pr来记录父节点
+    RbTreeNode<Type>* pr = nil;  // 用pr来记录父节点
     RbTreeNode<Type>* s = root;  // 定义s指向根节点
-    while (s != Nil) {
+    while (s != nil) {
       if (value == s->key) return false;
       pr = s;  // 每次记住s的父节点
       if (value < s->key)
@@ -47,10 +46,10 @@ class RbTree {
       else
         s = s->right;  // 大的节点则要往右子树找
     }
-    // 循环之后 s==Nil
-    s = BuyNode(value);  // 申请节点
-    if (pr == Nil) {
-      // 如果父节点pr是根节点, 第一次root指向Nil，所以默认pr==Nil
+    // 循环之后 s==nil
+    s = ApplyNode(value);  // 申请节点
+    if (pr == nil) {
+      // 如果父节点pr是根节点, 第一次root指向nil，所以默认pr==nil
       root = s;
       root->parent = pr;
     } else {  // 如果父节点不是根节点
@@ -68,7 +67,7 @@ class RbTree {
 
   void Remove(Type key) {
     RbTreeNode<Type>* t;
-    if ((t = Search(root, key)) != Nil) {
+    if ((t = Search(root, key)) != nil) {
       Remove(t);
     } else
       std::cout << "The key does not exist." << std::endl;
@@ -79,18 +78,18 @@ class RbTree {
  protected:
   // 申请节点，将节点的颜色的初始化为红色，初始化节点的颜色为红色
   // 初始化节点的关键字，其他初始化为空
-  RbTreeNode<Type>* BuyNode(const Type& x = Type()) {
+  RbTreeNode<Type>* ApplyNode(const Type& x = Type()) {
     RbTreeNode<Type>* s = new RbTreeNode<Type>();
     assert(s != nullptr);
     s->color = RED;
-    s->left = s->right = s->parent = Nil;
+    s->left = s->right = s->parent = nil;
     s->key = x;
     return s;
   }
 
   // 中序遍历
   void InOrder(RbTreeNode<Type>* root) {
-    if (root != Nil) {
+    if (root != nil) {
       InOrder(root->left);
       std::cout << root->key << " ";
       InOrder(root->right);
@@ -102,7 +101,7 @@ class RbTree {
     RbTreeNode<Type>* y = z->right;
     z->right = y->left;
     // y所指左节点不为空时
-    if (y->left == Nil) y->left->parent = z;
+    if (y->left == nil) y->left->parent = z;
     y->parent = z->parent;
     // z为根节点时
     if (root == z)
@@ -121,7 +120,7 @@ class RbTree {
     RbTreeNode<Type>* y = z->left;
     z->left = y->right;
     // y所指左节点不为空时
-    if (y->right == Nil) y->right->parent = z;
+    if (y->right == nil) y->right->parent = z;
     y->parent = z->parent;
     // z为根节点时
     if (root == z)
@@ -197,7 +196,7 @@ class RbTree {
   // 查找节点s
   RbTreeNode<Type>* Search(RbTreeNode<Type>* root, Type key) const {
     // root 为空, 或key与根的key相同
-    if (root == Nil) return Nil;
+    if (root == nil) return nil;
     if (root->key == key) return root;
     if (key < root->key)
       return Search(root->left, key);
@@ -207,7 +206,7 @@ class RbTree {
 
   // 将u的子节点指向u的指针改变为指向v, 将v的父节点指针改变为指向u的父节点
   void Transfer(RbTreeNode<Type>* u, RbTreeNode<Type>* v) {
-    if (u->parent == Nil) root = v;  // 若u的父节点为空，令根为v
+    if (u->parent == nil) root = v;  // 若u的父节点为空，令根为v
     // u父节点不为空, 且u在左子树
     else if (u == u->parent->left)
       u->parent->left = v;
@@ -218,19 +217,19 @@ class RbTree {
 
   // 找最小值
   RbTreeNode<Type>* Minimum(RbTreeNode<Type>* x) {
-    if (x->left == Nil) return x;
+    if (x->left == nil) return x;
     return Minimum(x->left);
   }
 
   void Remove(RbTreeNode<Type>* z) {
-    RbTreeNode<Type>* x = Nil;
+    RbTreeNode<Type>* x = nil;
     RbTreeNode<Type>* y = z;  // y记住传进来的z结点
     Color ycolor = y->color;  //
-    if (z->left == Nil)       // z只有右孩子
+    if (z->left == nil)       // z只有右孩子
     {
       x = z->right;
       Transfer(z, z->right);
-    } else if (z->right == Nil)  // z只有右孩子
+    } else if (z->right == nil)  // z只有右孩子
     {
       x = z->left;
       Transfer(z, z->left);
@@ -239,10 +238,10 @@ class RbTree {
       y = Minimum(z->right);  // y是z右子树的的最左子树
       ycolor = y->color;
       x = y->right;
-      if (y->parent == z)  // z的右子结点没有左节点或为Nil
+      if (y->parent == z)  // z的右子结点没有左节点或为nil
       {
         x->parent = y;
-      } else  // z的右子结点有左节点或为Nil
+      } else  // z的右子结点有左节点或为nil
       {
         Transfer(y, y->right);
         y->right = z->right;
@@ -326,15 +325,15 @@ class RbTree {
     x->color = BLACK;
   }
   void Destroy(RbTreeNode<Type>*& root) {
-    if (root == Nil) return;
-    if (root->left != Nil) Destroy(root->left);
-    if (root->right != Nil) Destroy(root->right);
+    if (root == nil) return;
+    if (root->left != nil) Destroy(root->left);
+    if (root->right != nil) Destroy(root->right);
     delete root;
     root = nullptr;
   }
   // 中序遍历打印结点详细的结点颜色
   void InOrderPrint(RbTreeNode<Type>* node) {
-    if (node == Nil) {
+    if (node == nil) {
       return;
     }
     if (node->left != NULL) {
@@ -342,12 +341,12 @@ class RbTree {
     }
     std::cout << node->key << "(" << ((node->color == BLACK) ? "BLACK" : "RED") << ")"
               << " ";
-    if (node->right != Nil) {
+    if (node->right != nil) {
       InOrderPrint(node->right);
     }
   }
 
  private:
   RbTreeNode<Type>* root;  // 根指针
-  RbTreeNode<Type>* Nil;   // 外部节点，表示空节点，颜色为黑色
+  RbTreeNode<Type>* nil;   // 外部节点，表示空节点，颜色为黑色
 };
