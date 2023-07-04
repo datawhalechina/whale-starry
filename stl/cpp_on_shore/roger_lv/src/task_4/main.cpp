@@ -44,8 +44,9 @@ class ShoppingCart {
     for (const auto& pair : items) {
       const Product& product = pair.first;
       int quantity = pair.second;
-      std::cout << "Product: " << product.GetName() << ", Quantity: " << quantity 
-                << std::endl;
+      
+      std::cout << "Product: " << product.GetName() << ", Quantity: " << quantity;
+      std::cout << std::endl;
     }
   }
 };
