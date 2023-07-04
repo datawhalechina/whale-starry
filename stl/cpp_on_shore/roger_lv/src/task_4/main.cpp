@@ -17,9 +17,7 @@ class Product {
 
   double GetPrice() const { return price; }
 
-  bool operator<(const Product& other) const{
-    return this->price < other.price;
-  }
+  bool operator<(const Product& other) const { return this->price < other.price; }
 };
 
 // 购物车类
@@ -46,18 +44,17 @@ class ShoppingCart {
     for (const auto& pair : items) {
       const Product& product = pair.first;
       int quantity = pair.second;
-      std::cout << "Product: " << product.GetName() << ", Quantity: " << quantity << std::endl;
+      std::cout << "Product: " << product.GetName() << ", Quantity: " << quantity 
+                << std::endl;
     }
   }
 };
 
 int main() {
-  
   Product product1("Item 1", 10.99);
   Product product2("Item 2", 5.99);
   Product product3("Item 3", 7.99);
 
-  
   ShoppingCart cart;
 
   cart.AddItem(product1, 2);
