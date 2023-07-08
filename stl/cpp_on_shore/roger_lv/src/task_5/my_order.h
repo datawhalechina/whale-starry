@@ -18,7 +18,8 @@ class Order {
     this->order_status = status;
   }
   void PrintInfo() const {
-    std::cout << "order_id: " << order_id << " order_name: " << order_name << " order_status: " << order_status << std::endl;
+    std::cout << "order_id: " << order_id << " order_name: " << order_name 
+              << " order_status: " << order_status << std::endl;
   }
   int GetId() const { return order_id; }
   std::string GetName() const { return order_name; }
