@@ -7,7 +7,7 @@
 
 class Order {
  public:
-  // 订单编号
+  //  订单编号
   int orderNumber;
   // 顾客姓名
   std::string customerName;
@@ -15,7 +15,7 @@ class Order {
   std::string status;
   // 订单价值
   int orderValue;
-  // 预测的订单将来价值
+  // 订单周期
   int orderTime;
 
   Order(int n, std::string cn, std::string s, int ov, int ot)
@@ -88,6 +88,70 @@ class OrderSystem {
     // mapOrder[6] = order6;
     setOrder.insert(order6);
   }
+
+  // 增加订单
+  void add_order(int n, std::string cn, std::string s, int ov, int ot) {
+    Order temp{n, cn, s, ov, ot};
+    vecOrder.push_back(temp);
+    listOrder.push_front(temp);
+    mapOrder.insert({temp.orderNumber, temp});
+    setOrder.insert(temp);
+  }
+
+  // 删除指定订单编号的订单
+  void del_order(int key) {
+    auto it = mapOrder.find(key);
+    std::cout << "DEL: " << mapOrder.at(key).customerName << std::endl;
+    if (it != mapOrder.end()) {
+      // std::cout << mapOrder.at(key).status << std::endl;
+      // The bellow code doesn't work? why??
+      // std::cout << mapOrder[key].status << std::endl;
+      // 删除list里的order
+      auto it_list = listOrder.begin();
+      while (it_list != listOrder.end()) {
+        if (*it_list == it->second) {
+          auto iter_tmp_list = it_list;
+          it_list++;
+          if (it_list != listOrder.end()) {
+            listOrder.erase(iter_tmp_list);
+          } else {
+            listOrder.pop_back();
+            break;
+          }
+
+        } else {
+          it_list++;
+        }
+      }
+
+      // 删除vector里的order
+      auto it_vec = vecOrder.begin();
+      while (it_vec != vecOrder.end()) {
+        if (*it_vec == it->second) {
+          auto iter_tmp_vec = it_vec;
+          it_vec++;
+          if (it_vec != vecOrder.end()) {
+            vecOrder.erase(iter_tmp_vec);
+          } else {
+            vecOrder.pop_back();
+            break;
+          }
+        } else {
+          it_vec++;
+        }
+      }
+
+      // 删除set里的order
+      setOrder.erase(it->second);
+
+      // 删除map里的order
+      mapOrder.erase(it);
+
+    } else {
+      std::cout << "Not Found the order of " << key << std::endl;
+    }
+  }
+
   // 按照id打印订单
   void print_map() {
     std::cout << "-----Print based on id--------" << std::endl;
