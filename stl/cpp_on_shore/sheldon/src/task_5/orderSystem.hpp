@@ -19,11 +19,7 @@ class Order {
   int orderTime;
 
   Order(int n, std::string cn, std::string s, int ov, int ot)
-      : orderNumber(n),
-        customerName(cn),
-        status(s),
-        orderValue(ov),
-        orderTime(ot) {}
+      : orderNumber(n), customerName(cn), status(s), orderValue(ov), orderTime(ot) {}
 
   /* 排序规则：
    * 按照订单价值降序排列；
@@ -173,10 +169,9 @@ class OrderSystem {
       std::cout << "setOrder is empty" << std::endl;
     } else {
       for (auto p : setOrder) {
-        std::cout << "orderNum: " << p.orderNumber
-                  << " customerName: " << p.customerName
-                  << " orderValue: " << p.orderValue
-                  << " orderTime: " << p.orderTime << std::endl;
+        std::cout << "orderNum: " << p.orderNumber << " customerName: " << p.customerName
+                  << " orderValue: " << p.orderValue << " orderTime: " << p.orderTime
+                  << std::endl;
       }
     }
   }
@@ -209,10 +204,9 @@ class OrderSystem {
       std::cout << "setOrder is empty" << std::endl;
     } else {
       for (auto p : listOrder) {
-        std::cout << "orderNum: " << p.orderNumber
-                  << " customerName: " << p.customerName
-                  << " orderValue: " << p.orderValue
-                  << " orderTime: " << p.orderTime << std::endl;
+        std::cout << "orderNum: " << p.orderNumber << " customerName: " << p.customerName
+                  << " orderValue: " << p.orderValue << " orderTime: " << p.orderTime
+                  << std::endl;
       }
     }
   }
