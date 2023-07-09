@@ -38,12 +38,12 @@ class MyIterator {
 };
 
 int main() {
-  std::vector<int> myVector = {1, 2, 3, 4, 5};
-  MyIterator myIterator(myVector.begin());
+  std::vector<int> my_vector = {1, 2, 3, 4, 5};
+  MyIterator my_iterator(my_vector.begin());
 
-  while (myIterator != myVector.end()) {
-    std::cout << *myIterator << " ";
-    ++myIterator;
+  while (my_iterator != my_vector.end()) {
+    std::cout << *my_iterator << " ";
+    ++my_iterator;
   }
 
   return 0;
