@@ -38,9 +38,7 @@ class MyIterator {
     return temp;
   }
 
-  bool operator==(const MyIterator& other) const {
-    return m_ptr == other.m_ptr;
-  }
+  bool operator==(const MyIterator& other) const { return m_ptr == other.m_ptr; }
 
   bool operator!=(const MyIterator& other) const { return !(*this == other); }
 
