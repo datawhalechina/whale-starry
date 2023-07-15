@@ -24,7 +24,7 @@
     };
     ```
 
-- 实现起来也很简单，参照不同容器下自己定义的iterator即可，std::vector\<int\>::iterator
+- 实现起来也很简单，参照不同容器下自己定义的iterator即可，`std::vector<int>::iterator`
 
     ```c++
     // 比如自己写一个iterator类，但注意这里必须要传一个容器节点Node而不是直接传一个容器类
