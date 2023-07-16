@@ -7,8 +7,8 @@ class MyIterator {
   typedef T value_type;
   typedef T& reference;
   typedef T* pointer;
-  typedef std::ptrdiff_t difference_type;
-  typedef std::bidirectional_iterator_tag iterator_category;
+  typedef typename std::ptrdiff_t difference_type;
+  typedef typename std::bidirectional_iterator_tag iterator_category;
 
   MyIterator(pointer ptr) : m_ptr(ptr) {}
 
