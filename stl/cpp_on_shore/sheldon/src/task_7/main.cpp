@@ -5,8 +5,7 @@ void print_map(std::unordered_map<std::string, int>& hashtable) {
   // 输出哈希表中的所有键值对
   std::cout << "Hashtable contents:" << std::endl;
   for (const auto& pair : hashtable) {
-    std::cout << "Key: " << pair.first << ", Value: " << pair.second
-              << std::endl;
+    std::cout << "Key: " << pair.first << ", Value: " << pair.second << std::endl;
   }
 }
 
