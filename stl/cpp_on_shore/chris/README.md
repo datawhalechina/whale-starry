@@ -8,3 +8,4 @@
 | 4    | 刷题开发-map                    | 2023-07-01 | 2023-07-03 | doc/task_4/ | src/task_4/ | stl-map源码阅读, map常用接口使用, stl-map设计方法学习                                     |
 | 5    | 用vector+list+map造一个案例场景 | 2023-07-05 | 2023-07-08 | doc/task_5/ | src/task_5/ | 使用vector+list+map创建一个订单管理系统                                                   |
 | 6    | 迭代器-iterator                 | 2023-07-09 | 2023-07-11 | doc/task_6/ | src/task_6/ | stl-iterator阅读(stl_iterator_base_types.h, stl_iterator_base_func.h), 接口即设计方法学习 |
+| 7    | 哈希表-hashmap                  | 2023-07-12 | 2023-07-15 | doc/task_7/ | src/task_7  | stl hashtable.h, hashtable_policy.h, functional_hash.h源码阅读, 接口及设计方法学习        |
