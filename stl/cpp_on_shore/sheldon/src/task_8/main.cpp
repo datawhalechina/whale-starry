@@ -1,13 +1,13 @@
 #include <deque>
 #include <iostream>
 
-
 class MyClass {
  public:
-  int value;
-
   // 构造函数
   MyClass(int val) : value(val) {}
+
+ public:
+  int value;
 };
 
 int main() {
