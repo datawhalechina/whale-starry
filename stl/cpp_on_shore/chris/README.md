@@ -9,3 +9,4 @@
 | 5    | 用vector+list+map造一个案例场景 | 2023-07-05 | 2023-07-08 | doc/task_5/ | src/task_5/ | 使用vector+list+map创建一个订单管理系统                                                   |
 | 6    | 迭代器-iterator                 | 2023-07-09 | 2023-07-11 | doc/task_6/ | src/task_6/ | stl-iterator阅读(stl_iterator_base_types.h, stl_iterator_base_func.h), 接口即设计方法学习 |
 | 7    | 哈希表-hashmap                  | 2023-07-12 | 2023-07-15 | doc/task_7/ | src/task_7  | stl hashtable.h, hashtable_policy.h, functional_hash.h源码阅读, 接口及设计方法学习        |
+| 8    | 双端队列-deque                  | 2023-07-17 | 2023-07-19 | doc/task_8  | src/task_8  | stl_deque.h源码阅读, 接口及设计方法学习                                                   |
