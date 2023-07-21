@@ -9,3 +9,5 @@
 | 5 | [刷题开发-map](https://github.com/gcc-mirror/gcc/blob/releases/gcc-9/libstdc%2B%2B-v3/include/bits/stl_map.h) | 2023-07-01 | 2023-07-03 | doc\task_4\learning.md |  src\task_4\main.cpp |
 | 6 | 用vector+list+map造一个案例场景 | 2023-07-06 | 2023-07-08 | doc\task_5\learning.md |  src\task_5\my_test.cpp |
 | 7 | [迭代器-iterator](https://github.com/gcc-mirror/gcc/blob/releases/gcc-9/libstdc%2B%2B-v3/include/bits/stl_iterator_base_types.h) | 2023-07-09 | 2023-07-11 | doc\task_6\learning.md |  src\task_6\my_main.cpp |
+| 8 | [哈希表-HashTable](https://github.com/gcc-mirror/gcc/blob/releases/gcc-9/libstdc%2B%2B-v3/include/bits/hashtable.h) | 2023-07-12 | 2023-07-14| doc\task_7\learning.md |  src\task_7\my_main.cpp |
+| 9 | [双端队列-Deque](https://github.com/gcc-mirror/gcc/blob/releases/gcc-9/libstdc%2B%2B-v3/include/bits/stl_deque.h) | 2023-07-16 | 2023-07-19| doc\task_8\learning.md |  src\task_8\deque.cpp |
