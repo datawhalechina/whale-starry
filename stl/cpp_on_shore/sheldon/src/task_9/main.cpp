@@ -3,20 +3,8 @@
 #include <list>
 #include <vector>
 
-
 template <typename Key, typename Value>
 class HashTable {
- private:
-  // 哈希桶，使用链表存储冲突的元素
-  using Bucket = std::list<std::pair<Key, Value>>;
-
-  // 哈希表内部存储结构
-  std::vector<Bucket> table;
-  std::hash<Key> hashFunc;
-
-  // 获取桶的索引
-  size_t getBucketIndex(const Key& key) const { return hashFunc(key) % table.size(); }
-
  public:
   // 构造函数，初始化哈希表大小
   HashTable(size_t size = 10) { table.resize(size); }
@@ -60,6 +48,17 @@ class HashTable {
       std::cout << std::endl;
     }
   }
+
+ private:
+  // 哈希桶，使用链表存储冲突的元素
+  using Bucket = std::list<std::pair<Key, Value>>;
+
+  // 哈希表内部存储结构
+  std::vector<Bucket> table;
+  std::hash<Key> hashFunc;
+
+  // 获取桶的索引
+  size_t getBucketIndex(const Key& key) const { return hashFunc(key) % table.size(); }
 };
 
 int main() {
