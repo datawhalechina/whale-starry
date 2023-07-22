@@ -15,9 +15,7 @@ class HashTable {
   std::hash<Key> hashFunc;
 
   // 获取桶的索引
-  size_t getBucketIndex(const Key& key) const {
-    return hashFunc(key) % table.size();
-  }
+  size_t getBucketIndex(const Key& key) const { return hashFunc(key) % table.size(); }
 
  public:
   // 构造函数，初始化哈希表大小
